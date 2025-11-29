@@ -11,8 +11,10 @@ if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
     die("Invalid request. CSRF token validation failed.");
 }
 
+$conn = getConnection();
+
 if (!$conn) {
-    die("Database connection failed: " . $conn->connect_error);
+    die("Database connection failed");
 }
 
 // SANITIZE INPUT FUNCTION
@@ -108,21 +110,25 @@ if (!isset($errors['birthdate'])) {
     $age = null;
 }
 
-// DUPLICATE CHECK FUNCTION
+// DUPLICATE CHECK FUNCTION (PDO VERSION)
 function check_duplicate($conn, $field, $value, &$errors) {
     $value = trim($value);
     error_log("Checking duplicate $field: '$value'");
+    
+    // PDO QUERY - Changed from MySQLi
     $query = $conn->prepare("SELECT $field FROM users WHERE TRIM($field) = ?");
     if (!$query) {
-        die("Prepare failed: " . $conn->error);
+        die("Prepare failed");
     }
-    $query->bind_param("s", $value);
-    $query->execute();
-    $query->store_result();
-    if ($query->num_rows > 0) {
+    
+    // PDO EXECUTE - Changed from bind_param
+    $query->execute([$value]);
+    
+    // PDO ROW COUNT - Changed from num_rows
+    $results = $query->fetchAll();
+    if (count($results) > 0) {
         $errors[$field . '_exists'] = ucfirst($field) . " already exists.";
     }
-    $query->close();
 }
 
 // CHECK DUPLICATES
@@ -138,31 +144,30 @@ if (!empty($errors)) {
     exit();
 }
 
-// INSERT NEW USER
+// INSERT NEW USER (PDO VERSION)
 $stmt = $conn->prepare("INSERT INTO users (
     idno, firstname, middlename, lastname, suffix, sex, email, username, password, birthdate, age, purok, barangay, municipality, province, country, zipcode
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 if (!$stmt) {
-    die("Statement preparation failed: " . $conn->error);
+    die("Statement preparation failed");
 }
 
-$stmt->bind_param(
-    "sssssssssssssssss",
-    $idno, $firstname, $middlename, $lastname, $suffix, $sex, $email,
-    $username, $hashed_password, $birthdate, $age, $purok, $barangay,
-    $municipality, $province, $country, $zipcode
-);
-
-if ($stmt->execute()) {
+// PDO EXECUTE - Changed from bind_param
+try {
+    $stmt->execute([
+        $idno, $firstname, $middlename, $lastname, $suffix, $sex, $email,
+        $username, $hashed_password, $birthdate, $age, $purok, $barangay,
+        $municipality, $province, $country, $zipcode
+    ]);
+    
     $logger->logRegistration($username, $email);
     $_SESSION['success'] = "Registration successful.";
-} else {
+    
+} catch (PDOException $e) {
+    error_log("Registration error: " . $e->getMessage());
     $_SESSION['error'] = "Registration failed. Please try again.";
 }
-
-$stmt->close();
-$conn->close();
 
 header("Location: registration.php");
 exit();

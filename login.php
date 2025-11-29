@@ -60,21 +60,26 @@ elseif ($_SESSION['lockout_time'] > $current_time) {
 }
 
 /* ------------------------
-   LOGIN PROCESS
+   LOGIN PROCESS (PDO VERSION)
 ------------------------- */
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
+    // PDO QUERY - Changed from MySQLi
     $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
-    if (!$stmt) die("DB Error: " . $conn->error);
+    if (!$stmt) {
+        die("DB Error: Query preparation failed");
+    }
     
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $stmt->bind_result($stored_password);
-    $user_exists = $stmt->fetch();
-    $stmt->close();
+    // PDO EXECUTE - Changed from bind_param
+    $stmt->execute([$username]);
+    
+    // PDO FETCH - Changed from bind_result
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stored_password = $user['password'] ?? null;
+    $user_exists = ($user !== false);
 
     $remaining_attempts_in_set = 2 - ($_SESSION['login_attempts'] % 3);
 
