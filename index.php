@@ -1,5 +1,4 @@
-<?php
-// home.php - Welcome page with auto-redirect for logged-in users
+<?php //index.php - Welcome page with auto-redirect for logged-in users
 session_start();
 
 // If user is already logged in, redirect to dashboard
@@ -35,7 +34,7 @@ if (isset($_SESSION['username'])) {
 
         .navbar {
             background: rgba(0, 0, 0, 0.95);
-            padding: 12px 0;
+            padding: 15px 0;
             border-bottom: 2px solid #ea580c;
             box-shadow: 0 2px 20px rgba(234, 88, 12, 0.3);
         }
@@ -52,7 +51,7 @@ if (isset($_SESSION['username'])) {
         .logo a {
             color: white;
             text-decoration: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -69,38 +68,45 @@ if (isset($_SESSION['username'])) {
             gap: 15px;
         }
 
-        .navdiv button {
+        .navdiv ul li a {
             background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .navdiv button a {
             color: white;
             text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+        }
+
+        .navdiv ul li a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
         }
 
         .main-content {
             flex: 1;
             display: flex;
             justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 50px;
+            padding: 50px 30px;
             position: relative;
             color: white;
         }
 
         .hero-section {
             z-index: 1;
+            max-width: 1200px;
         }
 
         .hero-section h1 {
             font-size: 4rem;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             text-shadow: 3px 3px 20px rgba(234, 88, 12, 0.5);
         }
 
@@ -110,132 +116,197 @@ if (isset($_SESSION['username'])) {
 
         .hero-section p {
             font-size: 1.4rem;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+            opacity: 0.95;
         }
 
         .tagline {
             color: #ea580c;
             font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 40px;
         }
 
         .cta-buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
 
         .cta-btn {
-            padding: 14px 40px;
-            font-size: 1rem;
-            border-radius: 50px;
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
         }
 
         .cta-btn.primary {
             background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
             color: white;
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(234, 88, 12, 0.6);
         }
 
         .cta-btn.secondary {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
             border: 2px solid #ea580c;
             color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-btn.secondary:hover {
+            background: rgba(234, 88, 12, 0.2);
+            transform: translateY(-3px);
         }
 
         .features {
             display: flex;
-            gap: 25px;
+            gap: 30px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .feature {
-            background: rgba(255, 255, 255, 0.07);
-            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px 30px;
             border-radius: 15px;
             border: 1px solid rgba(234, 88, 12, 0.3);
-            width: 240px;
+            width: 280px;
             backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(234, 88, 12, 0.6);
         }
 
         .feature-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
         }
 
         .feature h3 {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #ea580c;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .feature p {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             opacity: 0.9;
         }
 
-        /* ------------------ MOBILE RESPONSIVE ------------------ */
-        @media (max-width: 768px) {
+        .footer {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-top: 2px solid #ea580c;
+        }
 
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ea580c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ------------------ MOBILE RESPONSIVE ------------------ */
+        @media (max-width: 968px) {
             .navdiv {
-                flex-direction: column;
-                gap: 15px;
-                padding: 10px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navdiv ul {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .navdiv ul li a {
+                padding: 8px 16px;
+                font-size: 13px;
             }
 
             .hero-section h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-section .emoji {
                 font-size: 3rem;
             }
 
+            .hero-section .emoji {
+                font-size: 3.5rem;
+            }
+
             .hero-section p {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
 
             .cta-buttons {
                 flex-direction: column;
-                gap: 15px;
+                align-items: center;
             }
 
             .cta-btn {
                 width: 100%;
-                padding: 12px;
+                max-width: 350px;
+                justify-content: center;
             }
 
             .features {
                 flex-direction: column;
                 align-items: center;
-                width: 100%;
-                padding: 0 20px;
             }
 
             .feature {
                 width: 100%;
+                max-width: 350px;
             }
         }
 
-        @media (max-width: 480px) {
-
+        @media (max-width: 600px) {
             .hero-section h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .hero-section .emoji {
-                font-size: 2.4rem;
+                font-size: 2.8rem;
             }
 
             .hero-section p {
                 font-size: 1rem;
             }
 
+            .tagline {
+                font-size: 1.1rem;
+            }
+
             .cta-btn {
-                padding: 10px 20px;
-                font-size: 0.95rem;
+                padding: 14px 35px;
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 30px 20px;
             }
         }
 
@@ -247,24 +318,28 @@ if (isset($_SESSION['username'])) {
     <nav class="navbar">
         <div class="navdiv">
             <div class="logo">
-                <a href="#"><span>🎬</span> CineMax <span> Staff Portal</span></a>
+                <a href="index.php"><span>🎬</span> CineMax <span>Portal</span></a>
             </div>
             <ul>
-                <button><a href="login.php">Login</a></button>
-                <button><a href="registration.php">Register</a></button>
+                <li><a href="login.php"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="registration.php"><i class="fas fa-user-plus"></i> Register</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="main-content">
         <div class="hero-section">
-            <h1><span class="emoji">🍿</span> Welcome to CineMax Staff Portal</h1>
+            <h1><span class="emoji">🍿</span> Welcome to CineMax Portal</h1>
             <p>Your all-in-one system for managing movie reservations</p>
             <p class="tagline">Handle bookings • Manage schedules • Assist customers</p>
 
             <div class="cta-buttons">
-                <a href="login.php" class="cta-btn primary">Proceed to Login</a>
-                <a href="registration.php" class="cta-btn secondary">Create Staff Account</a>
+                <a href="login.php" class="cta-btn primary">
+                    <i class="fas fa-sign-in-alt"></i> Proceed to Login
+                </a>
+                <a href="registration.php" class="cta-btn secondary">
+                    <i class="fas fa-user-plus"></i> Create Staff Account
+                </a>
             </div>
 
             <div class="features">
@@ -288,6 +363,11 @@ if (isset($_SESSION['username'])) {
             </div>
 
         </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 CineMax Portal. All Rights Reserved.</p>
+        <p>Designed for seamless movie booking management</p>
     </div>
 
 </body>

@@ -1,11 +1,14 @@
-# PHP + Apache official image
+# PHP + Apache
 FROM php:8.2-apache
 
-# Copy all project files to Apache root
+# Install MySQLi extension
+RUN docker-php-ext-install mysqli
+
+# Copy project files
 COPY . /var/www/html/
 
-# Enable mod_rewrite if needed
+# Enable mod_rewrite
 RUN a2enmod rewrite
 
-# Expose default HTTP port
+# Expose port 80
 EXPOSE 80

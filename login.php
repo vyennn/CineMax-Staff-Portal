@@ -132,8 +132,6 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<!-- REST OF YOUR HTML STAYS THE SAME -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -145,384 +143,403 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="../javascript/disable_back_button.js"></script>
     <style>
         * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 100vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    background: #0f3460;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
 
-/* HEADER */
-.header {
-    padding: 15px 30px;
-    background: rgba(0, 0, 0, 0.95);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    box-shadow: 0 2px 20px rgba(234, 88, 12, 0.3);
-    border-bottom: 2px solid #ea580c;
-}
+        /* HEADER */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(234, 88, 12, 0.3);
+            border-bottom: 2px solid #ea580c;
+        }
 
-.logo a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.8rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
 
-.logo span {
-    color: #ea580c;
-}
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+        }
 
-.header ul {
-    list-style: none;
-    display: flex;
-    gap: 15px;
-    margin: 0;
-    flex-wrap: wrap;
-}
+        .logo span {
+            color: #ea580c;
+        }
 
-.header ul li a {
-    color: white;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    transition: background 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            flex-wrap: wrap;
+        }
 
-.header ul li a:hover {
-    background: rgba(234, 88, 12, 0.2);
-}
+        nav ul li a {
+            background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+        }
 
-.disabled-link {
-    opacity: 0.5;
-    pointer-events: none;
-}
+        nav ul li a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
+        }
 
-/* MAIN CONTAINER */
-.main-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 30px 60px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    overflow: hidden;
-    flex-wrap: wrap;
-}
+        .disabled-link {
+            opacity: 0.5;
+            pointer-events: none;
+        }
 
-/* CONTENT */
-.content {
-    flex: 1;
-    color: white;
-    padding-right: 40px;
-}
+        /* MAIN CONTAINER */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 60px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
 
-.content h1 {
-    font-size: 3rem;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 15px rgba(234, 88, 12, 0.5);
-}
+        /* CONTENT */
+        .content {
+            flex: 1;
+            color: white;
+            padding-right: 40px;
+            min-width: 300px;
+        }
 
-.content .highlight {
-    color: #ea580c;
-    font-weight: bold;
-}
+        .content h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 15px rgba(234, 88, 12, 0.5);
+        }
 
-.content p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-top: 15px;
-}
+        .content .highlight {
+            color: #ea580c;
+            font-weight: bold;
+        }
 
-.movie-icons {
-    font-size: 2.5rem;
-    margin-top: 20px;
-    display: flex;
-    gap: 20px;
-}
+        .content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 15px;
+        }
 
-/* FORM CONTAINER */
-.form-container {
-    background: rgba(255, 255, 255, 0.98);
-    padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    width: 90%;
-    max-width: 420px;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: 2px solid rgba(234, 88, 12, 0.3);
-}
+        .movie-icons {
+            font-size: 2.5rem;
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
 
-/* FORM TEXT */
-.text h5 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 2rem;
-    color: #1a1a2e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
+        /* FORM CONTAINER */
+        .form-container {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid rgba(234, 88, 12, 0.3);
+        }
 
-.text h5 .icon {
-    color: #ea580c;
-}
+        /* FORM TEXT */
+        .text h5 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
-/* FORM FIELDS */
-.field {
-    margin-bottom: 20px;
-}
+        .text h5 .icon {
+            color: #ea580c;
+        }
 
-.field label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: 600;
-    font-size: 14px;
-}
+        /* FORM FIELDS */
+        .field {
+            margin-bottom: 22px;
+        }
 
-.required-asterisk {
-    color: #dc2626;
-    margin-left: 3px;
-}
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-.field input {
-    width: 100%;
-    padding: 13px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.3s;
-}
+        .required-asterisk {
+            color: #dc2626;
+            margin-left: 3px;
+        }
 
-.field input:focus {
-    outline: none;
-    border-color: #ea580c;
-    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
-}
+        .field input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
 
-.field input:disabled {
-    background: #f5f5f5;
-    cursor: not-allowed;
-}
+        .field input:focus {
+            outline: none;
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
 
-.error-message {
-    color: #dc2626;
-    font-size: 12px;
-    display: block;
-    margin-top: 5px;
-}
+        .field input:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
 
-.show-password-container {
-    margin-bottom: 22px;
-}
+        .error-message {
+            color: #dc2626;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+        }
 
-.show-password-container label {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-}
+        .show-password-container {
+            margin-bottom: 25px;
+        }
 
-.show-password-container input[type="checkbox"] {
-    margin-right: 8px;
-    cursor: pointer;
-}
+        .show-password-container label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
 
-/* BUTTON */
-.btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
-}
+        .show-password-container input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
 
-.btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
-}
+        /* BUTTON */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
+        }
 
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
+        }
 
-/* FORGOT PASSWORD */
-.forgot-reset-container {
-    margin: 20px 0;
-    text-align: center;
-}
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-.forgot-password a {
-    color: #ea580c;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-}
+        /* FORGOT PASSWORD */
+        .forgot-reset-container {
+            margin: 20px 0;
+            text-align: center;
+        }
 
-.forgot-password a:hover {
-    text-decoration: underline;
-}
+        .forgot-password a {
+            color: #ea580c;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-.form-switch {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-}
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
 
-.form-switch a {
-    color: #ea580c;
-    text-decoration: none;
-    font-weight: bold;
-}
+        .form-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
 
-.form-switch a:hover {
-    text-decoration: underline;
-}
+        .form-switch a {
+            color: #ea580c;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-/* FOOTER */
-.footer {
-    background: rgba(0, 0, 0, 0.95);
-    color: white;
-    text-align: center;
-    padding: 15px;
-    border-top: 2px solid #ea580c;
-}
+        .form-switch a:hover {
+            text-decoration: underline;
+        }
 
-.footer p {
-    margin: 5px 0;
-    font-size: 14px;
-}
+        /* FOOTER */
+        .footer {
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-top: 2px solid #ea580c;
+        }
 
-.footer a {
-    color: #ea580c;
-    text-decoration: none;
-    font-weight: 600;
-}
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
 
-.footer a:hover {
-    text-decoration: underline;
-}
+        .footer a {
+            color: #ea580c;
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-/* SCROLLBAR */
-.form-container::-webkit-scrollbar {
-    width: 6px;
-}
+        .footer a:hover {
+            text-decoration: underline;
+        }
 
-.form-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
+        /* SCROLLBAR */
+        .form-container::-webkit-scrollbar {
+            width: 6px;
+        }
 
-.form-container::-webkit-scrollbar-thumb {
-    background: #ea580c;
-    border-radius: 10px;
-}
+        .form-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
 
-/* RESPONSIVE MEDIA QUERY */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-        padding: 20px;
-        justify-content: center;
-        align-items: center;
-    }
+        .form-container::-webkit-scrollbar-thumb {
+            background: #ea580c;
+            border-radius: 10px;
+        }
 
-    .content {
-        text-align: center;
-        padding-right: 0;
-        margin-bottom: 20px;
-    }
+        /* RESPONSIVE MEDIA QUERY */
+        @media (max-width: 968px) {
+            .main-container {
+                flex-direction: column;
+                padding: 30px 20px;
+                justify-content: center;
+                align-items: center;
+            }
 
-    .content h1 {
-        font-size: 2rem;
-    }
+            .content {
+                text-align: center;
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
 
-    .movie-icons {
-        font-size: 2rem;
-        justify-content: center;
-    }
+            .content h1 {
+                font-size: 2.2rem;
+            }
 
-    .form-container {
-        width: 95%;
-        padding: 25px;
-        border-radius: 15px;
-    }
+            .movie-icons {
+                font-size: 2rem;
+                justify-content: center;
+            }
 
-    .header ul {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-    }
+            .form-container {
+                width: 95%;
+                max-width: 450px;
+                padding: 30px;
+            }
 
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
+            nav {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-    .btn {
-        font-size: 16px;
-        padding: 12px;
-    }
+            nav ul {
+                flex-direction: row;
+                width: auto;
+                gap: 10px;
+            }
 
-    .field input {
-        font-size: 14px;
-        padding: 10px;
-    }
-}
+            nav ul li a {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
 
+        @media (max-width: 600px) {
+            .content h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            .field input {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo"><a href="#"><span>🎬</span> CineMax<span> Staff Portal</span></a></div>
-        <ul>
-            <li>
-                <a href="home.php" id="homeLink" class="<?php if ($register_disabled) echo 'disabled-link'; ?>">
-                    <i class="fas fa-home"></i> Home
-                </a>
-            </li>
-            <li>
-                <a href="registration.php" id="signupLink" class="<?php if ($register_disabled) echo 'disabled-link'; ?>">
-                    <i class="fas fa-user-plus"></i> Sign Up
-                </a>
-            </li>
-        </ul>
-    </div>
+    <header>
+        <nav>
+            <a href="index.php" class="logo"><span>🎬</span> CineMax <span>Portal</span></a> 
+            <ul>
+                <li><a href="index.php" id="homeLink" class="<?php if ($register_disabled) echo 'disabled-link'; ?>"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="registration.php" id="signupLink" class="<?php if ($register_disabled) echo 'disabled-link'; ?>"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
     
     <div class="main-container">
         <div class="content">
-            <h1>Welcome Back to<br><span class="highlight">CineMax Staff Portal</span></h1>
+            <h1>Welcome Back to<br><span class="highlight">CineMax Portal</span></h1>
             <p>🎬 Manage customer bookings with ease</p>
             <p>🍿 Assist guests and ensure a smooth cinema experience</p>
             <div class="movie-icons">
@@ -532,7 +549,7 @@ body {
         
         <div class="form-container">
             <div class="text">
-                <h5><span class="icon">🎟️</span> Staff Login</h5>
+                <h5><span class="icon">🎟️</span> Login</h5>
             </div>
             <form id="login-form" method="POST">
                 <div class="field">
@@ -553,7 +570,7 @@ body {
                     </label>
                 </div>
 
-                <button class="btn" type="submit" id="loginButton" <?php if ($login_disabled) echo 'disabled'; ?>>🎬 Login to Book</button>
+                <button class="btn" type="submit" id="loginButton" <?php if ($login_disabled) echo 'disabled'; ?>>🎬 Login</button>
 
                 <div class="forgot-reset-container">
                     <?php if ($forgot_password_link): ?>
@@ -574,7 +591,10 @@ body {
         </div>
     </div>
 
-    
+    <div class="footer">
+        <p>&copy; 2024 CineMax Portal. All Rights Reserved.</p>
+        <p>Designed for seamless movie booking management</p>
+    </div>
 
     <script>
         var remainingLockTime = <?php echo $remaining_lock_time; ?>;

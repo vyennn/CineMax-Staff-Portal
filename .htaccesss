@@ -1,114 +1,167 @@
-# Disable directory browsing globally
+# ==============================================================================
+# CINEMAX PORTAL - APACHE CONFIGURATION
+# ==============================================================================
+
+# Disable directory browsing
 Options -Indexes
 
-# Prevent access to sensitive file types
-<FilesMatch "\.(log|txt|bak|sql|md|env|ini|config)$">
-    Order Deny,Allow
-    Deny from all
-</FilesMatch>
+# Set default index page
+DirectoryIndex index.php
 
-# Protect hidden files
-<FilesMatch "^\.">
-    Order Deny,Allow
-    Deny from all
-</FilesMatch>
+# ==============================================================================
+# SECURITY HEADERS
+# ==============================================================================
 
-# Custom error pages
-ErrorDocument 403 /Basalo/error_pages/403.html
-ErrorDocument 404 /Basalo/error_pages/404.html
+<IfModule mod_headers.c>
+    # Prevent clickjacking attacks
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS filter
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Control referrer information
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (adjust as needed for your site)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-awesome 'self' https://cdnjs.cloudflare.com; img-src 'self' data:;"
+    
+    # Force HTTPS (uncomment when SSL is configured)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
 
-# Disable PHP error display
-php_flag display_errors Off
-php_flag display_startup_errors Off
-php_flag log_errors On
-php_value error_log logs/php_errors.log
+# ==============================================================================
+# DENY ACCESS TO SENSITIVE FILES
+# ==============================================================================
 
-<Files "css">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-
-<Files "javascript">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-<Files "image">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-
-
-
-ErrorDocument 403 http://localhost/Basalo/php/404.html
-
-<Files "css">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-
-<Files "javascript">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-
-<Files "image">
-    Require all denied
-    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
-        Require all granted
-    </If>
-</Files>
-
-ErrorDocument 403 http://localhost/Basalo/php/404.html
-
-
-##############################################
-# SECURITY RULES  
-##############################################
-
-# Deny access to sensitive backend files
-<FilesMatch "^(db\.php|config\.php|connection\.php|credentials\.php)$">
+# Block access to PHP configuration and credential files
+<FilesMatch "^(db\.php|csrf_protection\.php|config\.php|credentials\.php|security_logger\.php)$">
     Require all denied
 </FilesMatch>
 
-# Prevent directory browsing
-Options -Indexes
+# Block access to common sensitive files
+<FilesMatch "\.(env|ini|log|bak|backup|sql|md5|sh|git|htaccess|htpasswd)$">
+    Require all denied
+</FilesMatch>
 
-# Disable PHP execution in upload directories (only if you have an uploads folder)
-<Directory "uploads">
-    php_flag engine off
-</Directory>
+# Protect .git directory if it exists (remove .git folder in production!)
+<DirectoryMatch "\.git">
+    Require all denied
+</DirectoryMatch>
+
+# Block access to composer files
+<FilesMatch "^(composer\.json|composer\.lock|package\.json|package-lock\.json)$">
+    Require all denied
+</FilesMatch>
+
+# ==============================================================================
+# PHP SECURITY SETTINGS
+# ==============================================================================
+
+<IfModule mod_php7.c>
+    # Disable dangerous PHP functions
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log /path/to/your/error.log
+    
+    # Session security
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 1
+    php_value session.use_only_cookies 1
+    php_value session.cookie_samesite Strict
+    
+    # Upload limits
+    php_value upload_max_filesize 5M
+    php_value post_max_size 5M
+    php_value max_execution_time 30
+    php_value max_input_time 30
+</IfModule>
+
+# ==============================================================================
+# REWRITE RULES
+# ==============================================================================
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Force HTTPS (uncomment when SSL certificate is installed)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Remove www (or add www - choose one)
+    # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    # RewriteRule ^(.*)$ http://%{HTTP_HOST}/$1 [R=301,L]
+    
+    # Block access to hidden files (like .htaccess, .htpasswd)
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+    
+    # Prevent access to backup and source files
+    RewriteRule "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$" - [F]
 </IfModule>
 
-# Security Headers
-Header always set X-Frame-Options "SAMEORIGIN"
-Header always set X-Content-Type-Options "nosniff"
-Header always set X-XSS-Protection "1; mode=block"
-Header always set Referrer-Policy "strict-origin-when-cross-origin"\
+# ==============================================================================
+# COMPRESSION & CACHING (PERFORMANCE)
+# ==============================================================================
 
-# Disable PHP error display
-php_flag display_errors Off
-php_flag display_startup_errors Off
-php_flag log_errors On
-php_value error_log logs/php_errors.log
+# Enable GZIP compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
 
-# Custom error pages
-ErrorDocument 500 /Basalo/error_pages/500.html
-ErrorDocument 404 /Basalo/error_pages/404.html
+# Browser caching for static files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Fonts
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    
+    # HTML files (don't cache PHP)
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
 
-# Directory index
-DirectoryIndex index.php
+# ==============================================================================
+# ERROR PAGES (OPTIONAL - CUSTOMIZE AS NEEDED)
+# ==============================================================================
+
+# ErrorDocument 400 /error-pages/400.html
+# ErrorDocument 401 /error-pages/401.html
+# ErrorDocument 403 /error-pages/403.html
+# ErrorDocument 404 /error-pages/404.html
+# ErrorDocument 500 /error-pages/500.html
+
+# ==============================================================================
+# ADDITIONAL SECURITY
+# ==============================================================================
+
+# Disable server signature
+ServerSignature Off
+
+# Prevent access from specific user agents (adjust as needed)
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|python|nikto|curl|scan|java|winhttp|clshttp|loader) [NC,OR]
+    RewriteCond %{HTTP_USER_AGENT} (<|>|'|%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
+    RewriteCond %{HTTP_USER_AGENT} (;|<|>|'|"|\)|\(|%0A|%0D|%22|%27|%28|%3C|%3E|%00).*(libwww-perl|wget|python|nikto|curl|scan|java|winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>

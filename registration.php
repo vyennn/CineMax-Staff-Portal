@@ -1,4 +1,4 @@
-<?php
+<?php //registration.php
 session_start();    
 include('csrf_protection.php');
 
@@ -14,7 +14,7 @@ $csrf_token = generateCSRFToken();
 <html>
 <head>
 <title>Register - CineMax Movie Booking</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
 <style>
     * {
         margin: 0;
@@ -26,12 +26,14 @@ $csrf_token = generateCSRFToken();
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
     
     header {
         background: rgba(0, 0, 0, 0.95);
         color: white;
-        padding: 12px 0;
+        padding: 15px 0;
         box-shadow: 0 2px 20px rgba(234, 88, 12, 0.3);
         border-bottom: 2px solid #ea580c;
     }
@@ -46,11 +48,13 @@ $csrf_token = generateCSRFToken();
     }
     
     .logo {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         font-weight: bold;
         display: flex;
         align-items: center;
         gap: 8px;
+        color: white;
+        text-decoration: none;
     }
     
     .logo span {
@@ -60,46 +64,51 @@ $csrf_token = generateCSRFToken();
     nav ul {
         list-style: none;
         display: flex;
-        gap: 20px;
+        gap: 15px;
     }
     
     nav ul li a {
+        background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
         color: white;
         text-decoration: none;
-        padding: 6px 12px;
-        border-radius: 5px;
-        transition: background 0.3s;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s;
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 14px;
+        box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);
     }
     
     nav ul li a:hover {
-        background: rgba(234, 88, 12, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
     }
     
     section {
-        padding: 55px 20px;
+        flex: 1;
+        padding: 40px 20px;
     }
     
     .wrapper {
         max-width: 1400px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.98);
-        padding: 25px 35px;
-        border-radius: 15px;
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        padding: 35px 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         border: 2px solid rgba(234, 88, 12, 0.3);
-        max-height: calc(100vh - 200px);
+        max-height: calc(100vh - 220px);
         overflow-y: auto;
     }
     
     .wrapper h1 {
         text-align: center;
         color: #1a1a2e;
-        margin-bottom: 8px;
-        font-size: 1.8rem;
+        margin-bottom: 10px;
+        font-size: 2rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -111,45 +120,45 @@ $csrf_token = generateCSRFToken();
     }
     
     hr {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         border: none;
         border-top: 2px solid #ea580c;
     }
     
     .personal_info, .user_login, .address {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
     
     h4 {
         color: #ea580c;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
         border-bottom: 2px solid #ea580c;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
     }
     
     .form-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 15px;
+        margin-bottom: 15px;
     }
     
     .form-grid-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 15px;
+        margin-bottom: 15px;
     }
     
     .form-grid-2 {
         display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        gap: 12px;
-        margin-bottom: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
     }
     
     .field-container {
@@ -158,9 +167,9 @@ $csrf_token = generateCSRFToken();
     }
     
     .field-container label {
-        font-size: 12px;
+        font-size: 13px;
         color: #333;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
         font-weight: 600;
     }
     
@@ -170,10 +179,10 @@ $csrf_token = generateCSRFToken();
     }
     
     input, select {
-        padding: 8px 10px;
+        padding: 10px 12px;
         border: 2px solid #ddd;
-        border-radius: 6px;
-        font-size: 13px;
+        border-radius: 8px;
+        font-size: 14px;
         width: 100%;
         transition: all 0.3s;
     }
@@ -181,33 +190,33 @@ $csrf_token = generateCSRFToken();
     input:focus, select:focus {
         outline: none;
         border-color: #ea580c;
-        box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.1);
+        box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
     }
     
     small {
         color: #dc2626;
-        font-size: 10px;
-        margin-top: 2px;
+        font-size: 11px;
+        margin-top: 3px;
         display: block;
-        min-height: 12px;
+        min-height: 14px;
     }
     
     .custom-suffix {
-        margin-top: 6px;
+        margin-top: 8px;
     }
     
     .submit-container {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 30px;
     }
     
     .submit-btn {
-        padding: 12px 50px;
+        padding: 16px 60px;
         background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
         color: white;
         border: none;
-        border-radius: 8px;
-        font-size: 16px;
+        border-radius: 10px;
+        font-size: 17px;
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s;
@@ -216,21 +225,20 @@ $csrf_token = generateCSRFToken();
     
     .submit-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+        box-shadow: 0 6px 25px rgba(234, 88, 12, 0.5);
     }
     
     .footer {
         background: rgba(0, 0, 0, 0.95);
         color: white;
         text-align: center;
-        padding: 12px;
-        margin-top: 15px;
+        padding: 15px;
         border-top: 2px solid #ea580c;
     }
     
     .footer p {
-        margin: 3px 0;
-        font-size: 12px;
+        margin: 5px 0;
+        font-size: 14px;
     }
     
     .footer a {
@@ -244,9 +252,9 @@ $csrf_token = generateCSRFToken();
     }
     
     #strength-bar, #match-bar {
-        height: 3px;
-        margin-top: 4px;
-        border-radius: 2px;
+        height: 4px;
+        margin-top: 5px;
+        border-radius: 3px;
         transition: all 0.3s;
     }
     
@@ -254,8 +262,8 @@ $csrf_token = generateCSRFToken();
         background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
         color: white;
         padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
         text-align: center;
         border: 3px solid #15803d;
         font-weight: 600;
@@ -267,8 +275,8 @@ $csrf_token = generateCSRFToken();
         background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
         color: white;
         padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
         border: 3px solid #7f1d1d;
         font-weight: 600;
         box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
@@ -289,8 +297,8 @@ $csrf_token = generateCSRFToken();
         background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
         color: white;
         padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
         text-align: center;
         border: 3px solid #c2410c;
         font-weight: 600;
@@ -324,12 +332,29 @@ $csrf_token = generateCSRFToken();
     }
 
     @media (max-width: 968px) {
+        nav {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            flex-direction: row;
+            width: auto;
+            gap: 10px;
+        }
+
+        nav ul li a {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
         .form-grid, .form-grid-3 {
             grid-template-columns: repeat(2, 1fr);
         }
 
         .wrapper {
-            padding: 20px;
+            padding: 30px 25px;
         }
     }
     
@@ -339,15 +364,20 @@ $csrf_token = generateCSRFToken();
         }
         
         .wrapper {
-            padding: 15px;
+            padding: 25px 20px;
         }
 
         h4 {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .wrapper h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 40px;
         }
     }
 </style>
@@ -356,9 +386,9 @@ $csrf_token = generateCSRFToken();
 
 <header>
 <nav>
-    <h1 class="logo"><span>🎬</span> Cine<span>Max</span></h1> 
+    <a href="index.php" class="logo"><span>🎬</span> CineMax <span>Portal</span></a> 
     <ul>
-        <li><a href="home.php"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="login.php"><i class="fas fa-sign-in-alt"></i> Login</a></li>
     </ul>
 </nav>
@@ -552,6 +582,11 @@ $csrf_token = generateCSRFToken();
     </form>
 </div>
 </section>
+
+<div class="footer">
+    <p>&copy; 2024 CineMax Portal. All Rights Reserved.</p>
+    <p>Designed for seamless movie booking management</p>
+</div>
 
 <script src="../javascript/sex.js"></script>
 <script src="../javascript/password.js"></script>
