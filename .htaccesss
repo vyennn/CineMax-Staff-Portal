@@ -1,0 +1,114 @@
+# Disable directory browsing globally
+Options -Indexes
+
+# Prevent access to sensitive file types
+<FilesMatch "\.(log|txt|bak|sql|md|env|ini|config)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Protect hidden files
+<FilesMatch "^\.">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Custom error pages
+ErrorDocument 403 /Basalo/error_pages/403.html
+ErrorDocument 404 /Basalo/error_pages/404.html
+
+# Disable PHP error display
+php_flag display_errors Off
+php_flag display_startup_errors Off
+php_flag log_errors On
+php_value error_log logs/php_errors.log
+
+<Files "css">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+
+<Files "javascript">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+<Files "image">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+
+
+
+ErrorDocument 403 http://localhost/Basalo/php/404.html
+
+<Files "css">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+
+<Files "javascript">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+
+<Files "image">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</Files>
+
+ErrorDocument 403 http://localhost/Basalo/php/404.html
+
+
+##############################################
+# SECURITY RULES  
+##############################################
+
+# Deny access to sensitive backend files
+<FilesMatch "^(db\.php|config\.php|connection\.php|credentials\.php)$">
+    Require all denied
+</FilesMatch>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Disable PHP execution in upload directories (only if you have an uploads folder)
+<Directory "uploads">
+    php_flag engine off
+</Directory>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Security Headers
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"\
+
+# Disable PHP error display
+php_flag display_errors Off
+php_flag display_startup_errors Off
+php_flag log_errors On
+php_value error_log logs/php_errors.log
+
+# Custom error pages
+ErrorDocument 500 /Basalo/error_pages/500.html
+ErrorDocument 404 /Basalo/error_pages/404.html
+
+# Directory index
+DirectoryIndex index.php

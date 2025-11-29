@@ -1,0 +1,6 @@
+<FilesMatch "\.(jpg|jpeg|png|gif|svg|webp)$">
+    Require all denied
+    <If "%{HTTP_REFERER} =~ m#^http://localhost/Basalo/#">
+        Require all granted
+    </If>
+</FilesMatch>

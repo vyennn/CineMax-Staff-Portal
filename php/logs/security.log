@@ -1,0 +1,34 @@
+[2025-11-29 07:06:32] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login SUCCESS for username: vivien.hermoso
+[2025-11-29 07:21:14] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 07:21:36] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 07:21:49] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 07:25:20] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 07:25:22] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 07:25:24] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 08:14:33] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login SUCCESS for username: vivien.hermoso
+[2025-11-29 08:43:58] [REGISTRATION] [User: jalenebasalo] [IP: ::1] New user registered: jalenebasalo (jalenebasalo@gmail.com)
+[2025-11-29 08:44:23] [LOGIN_ATTEMPT] [User: jalenebasalo] [IP: ::1] Login SUCCESS for username: jalenebasalo
+[2025-11-29 10:05:04] [LOGIN_ATTEMPT] [User: ' OR 1=1--] [IP: ::1] Login FAILED for username: ' OR 1=1--
+[2025-11-29 10:05:36] [LOGIN_ATTEMPT] [User: ' OR 1=1--] [IP: ::1] Login FAILED for username: ' OR 1=1--
+[2025-11-29 10:05:44] [LOGIN_ATTEMPT] [User: admin'--] [IP: ::1] Login FAILED for username: admin'--
+[2025-11-29 10:06:44] [LOGIN_ATTEMPT] [User: ' UNION SELECT NULL--] [IP: ::1] Login FAILED for username: ' UNION SELECT NULL--
+[2025-11-29 10:06:53] [LOGIN_ATTEMPT] [User: admin' OR '1'='1] [IP: ::1] Login FAILED for username: admin' OR '1'='1
+[2025-11-29 10:13:10] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 10:14:27] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 10:14:37] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login FAILED for username: vivien.hermoso
+[2025-11-29 10:14:43] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 10:16:01] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login SUCCESS for username: vivien.hermoso
+[2025-11-29 10:36:40] [LOGIN_ATTEMPT] [User: jalene.basalo] [IP: ::1] Login FAILED for username: jalene.basalo
+[2025-11-29 10:36:54] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login SUCCESS for username: vivien.hermoso
+[2025-11-29 11:55:59] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 12:08:05] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 12:08:09] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 12:43:30] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 13:52:53] [REGISTRATION] [User: krisna] [Email: encluna@gmail.com] [IP: ::1] New user registered successfully
+[2025-11-29 13:53:26] [LOGIN_ATTEMPT] [User: krisna] [IP: ::1] Login attempt FAILED for username: krisna
+[2025-11-29 13:53:48] [LOGIN_ATTEMPT] [User: krisna] [IP: ::1] Login attempt SUCCESS for username: krisna
+[2025-11-29 14:31:56] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 14:33:01] [LOGOUT] [User: vivien.hermoso] [IP: ::1] User logged out
+[2025-11-29 14:33:30] [LOGIN_ATTEMPT] [User: vivien.hermoso] [IP: ::1] Login attempt SUCCESS for username: vivien.hermoso
+[2025-11-29 14:33:38] [LOGOUT] [User: vivien.hermoso] [IP: ::1] User logged out
+[2025-11-29 14:40:21] [REGISTRATION] [User: testuser] [Email: testuser@gmail.com] [IP: ::1] New user registered successfully

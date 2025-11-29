@@ -1,0 +1,150 @@
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body and background */
+body {
+    background-color: #f4f7fa;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Header Styling */
+.header {
+    background-color: #3b5998;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin: 0;
+}
+
+/* Navigation Bar Styling */
+.nav {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    border-bottom: 2px solid #ddd;
+    padding: 15px 0;
+}
+
+.nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 0 20px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.nav a:hover,
+.nav a.active {
+    background-color: #3b5998;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Container Styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Welcome Section */
+.welcome {
+    flex: 2;
+    margin-right: 20px;
+}
+
+.welcome h2 {
+    font-size: 28px;
+    color: #3b5998;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Quick Links Section */
+.container div {
+    flex: 1;
+    margin-top: 20px;
+}
+
+.container h3 {
+    font-size: 22px;
+    color: #3b5998;
+    margin-bottom: 15px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+ul li a {
+    color: #3b5998;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Logout Button */
+.logout {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.logout a {
+    font-size: 18px;
+    color: #d9534f;
+    text-decoration: none;
+}
+
+.logout a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .welcome {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .nav {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .nav a {
+        margin: 10px 0;
+    }
+}
+
+

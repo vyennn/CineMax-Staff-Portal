@@ -1,0 +1,4 @@
+# Deny all access to logs directory
+Options -Indexes
+Order Deny,Allow
+Deny from all

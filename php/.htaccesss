@@ -1,0 +1,17 @@
+# Prevent directory listing
+Options -Indexes
+
+# Allow PHP execution but deny direct access to sensitive files
+<FilesMatch "\.(php)$">
+    # Allow PHP files to be executed by the application
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Deny direct access to specific sensitive files
+<FilesMatch "^(db|config|error_handler|security_logger)\.php$">
+    Order Deny,Allow
+    Deny from all
+    # Only allow localhost access for testing
+    Allow from 127.0.0.1
+</FilesMatch>
