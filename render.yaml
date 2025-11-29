@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: cinemax-portal
+    runtime: php
+    plan: free
+    buildCommand: |
+      apt-get update
+      apt-get install -y php-pgsql
+    startCommand: apache2-foreground

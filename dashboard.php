@@ -8,6 +8,7 @@ $username = $_SESSION['username'];
 $conn = getConnection();
 $sql = "SELECT * FROM movies WHERE status = 'showing' ORDER BY created_at DESC";
 $result = $conn->query($sql);
+$movies = $result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -226,7 +227,7 @@ $result = $conn->query($sql);
         .movie-image img {
             width: 100%;
             height: 100%;
-
+            object-fit: cover;
             position: absolute;
             top: 0;
             left: 0;
@@ -614,8 +615,8 @@ $result = $conn->query($sql);
     background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 30px;
-    max-height: calc(100vh - 200px);  /* ADD */
-    overflow-y: auto;                  /* ADD */
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 /* Screen */
 .screen {
@@ -1035,11 +1036,11 @@ $result = $conn->query($sql);
                     </a>
                 </li>
                 <li>
-    <a href="#" onclick="showSection('my-bookings')">
-        <i class="fas fa-receipt"></i>
-        <span>Bookings</span>
-    </a>
-</li>
+                    <a href="#" onclick="showSection('my-bookings')">
+                        <i class="fas fa-receipt"></i>
+                        <span>Bookings</span>
+                    </a>
+                </li>
                 
             </ul>
         </nav>
@@ -1051,8 +1052,8 @@ $result = $conn->query($sql);
                 <h1 class="section-title">🎬 Now Showing</h1>
                 <div class="movies-grid">
                     <?php
-                    if ($result->num_rows > 0) {
-                        while($movie = $result->fetch_assoc()) {
+                    if (count($movies) > 0) {
+                        foreach($movies as $movie) {
                             echo '
                             <div class="movie-poster">
                                 <div class="movie-image">
@@ -1872,4 +1873,4 @@ $result = $conn->query($sql);
 </body>
 </html>
 
-<?php $conn->close(); ?>
+<?php $conn = null(); ?>
