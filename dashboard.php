@@ -993,16 +993,16 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
                 <i class="fas fa-bars"></i>
             </button>
             <div class="logo">
-                <span>🎬</span> CineMax<span> Staff Portal</span>
+                <span>🎬</span> CineMax<span> Portal</span>
             </div>
         </div>
         <div class="user-section">
             <div class="welcome-text">
                 Welcome, <span class="username"><?php echo htmlspecialchars($username); ?></span>!
             </div>
-            <button class="logout-btn" onclick="confirmLogout()">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <button class="logout-btn" onclick="confirmLogout(); return false;">
+    <i class="fas fa-sign-out-alt"></i> Logout
+</button>
         </div>
     </header>
 
@@ -1012,31 +1012,31 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
         <nav class="sidebar" id="sidebar">
             <ul class="sidebar-menu">
                 <li>
-                    <a href="#" class="active" onclick="showSection('dashboard')">
+                    <a href="#" class="active" onclick="showSection('dashboard'); return false;">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showSection('manage-movies')">
+                    <a href="#" onclick="showSection('manage-movies'); return false;">
                         <i class="fas fa-film"></i>
                         <span>Manage Movies</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showSection('book-tickets')">
+                    <a href="#" onclick="showSection('book-tickets'; return false;">
                         <i class="fas fa-ticket-alt"></i>
                         <span>Book Tickets</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showSection('showtimes')">
+                    <a href="#" onclick="showSection('showtimes'); return false;">
                         <i class="fas fa-clock"></i>
                         <span>Showtimes</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showSection('my-bookings')">
+                    <a href="#" onclick="showSection('my-bookings'); return false;">
                         <i class="fas fa-receipt"></i>
                         <span>Bookings</span>
                     </a>
@@ -1813,6 +1813,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
             if (confirm("Are you sure you want to logout?")) {
                 window.location.href = "logout.php";
             }
+            return false;
         }
 
         function showSection(sectionId) {
@@ -1829,17 +1830,20 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
     // Show selected section
     document.getElementById(sectionId).classList.add('active');
 
-    // Add active class to clicked menu item
-    event.target.closest('a').classList.add('active');
+    // Add active class to clicked menu item - FIXED
+    const clickedLink = document.querySelector(`.sidebar-menu a[onclick*="${sectionId}"]`);
+    if (clickedLink) {
+        clickedLink.classList.add('active');
+    }
 
     // Load data for specific sections
     if (sectionId === 'manage-movies') {
         loadMoviesTable();
     } else if (sectionId === 'showtimes') {
         loadShowtimes();
-    } else if (sectionId === 'my-bookings') {    // ← ADD THIS
-        loadMyBookings();                         // ← ADD THIS
-    }                                             // ← ADD THIS
+    } else if (sectionId === 'my-bookings') {
+        loadMyBookings();
+    }
 
     // Close sidebar on mobile after selection
     if (window.innerWidth <= 968) {
