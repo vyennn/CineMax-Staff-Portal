@@ -1000,7 +1000,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
             <div class="welcome-text">
                 Welcome, <span class="username"><?php echo htmlspecialchars($username); ?></span>!
             </div>
-            <button class="logout-btn" onclick="confirmLogout(); return false;">
+            <button class="logout-btn" onclick="confirmLogout();">
     <i class="fas fa-sign-out-alt"></i> Logout
 </button>
         </div>
