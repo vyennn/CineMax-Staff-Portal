@@ -1000,7 +1000,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
             <div class="welcome-text">
                 Welcome, <span class="username"><?php echo htmlspecialchars($username); ?></span>!
             </div>
-            <button class="logout-btn" onclick="confirmLogout();">
+            <button class="logout-btn" onclick="confirmLogout(); return false;">
     <i class="fas fa-sign-out-alt"></i> Logout
 </button>
         </div>
@@ -1024,7 +1024,7 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showSection('book-tickets'; return false;">
+                    <a href="#" onclick="showSection('book-tickets'); return false;">
                         <i class="fas fa-ticket-alt"></i>
                         <span>Book Tickets</span>
                     </a>
@@ -1098,11 +1098,10 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
                 <select id="movieSelect" name="movie_id" required onchange="updateMovieInfo()">
                     <option value="">-- Select Movie --</option>
                     <?php
-                    $result->data_seek(0);
-                    while($movie = $result->fetch_assoc()) {
+                    foreach($movies as $movie) {
                         echo '<option value="' . $movie['id'] . '" 
-                              data-title="' . htmlspecialchars($movie['title']) . '">' 
-                              . htmlspecialchars($movie['title']) . '</option>';
+                            data-title="' . htmlspecialchars($movie['title']) . '">' 
+                            . htmlspecialchars($movie['title']) . '</option>';
                     }
                     ?>
                 </select>
