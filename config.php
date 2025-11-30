@@ -10,6 +10,7 @@ if ($db_url) {
     define('DB_PASS', $url['pass']);
     define('DB_NAME', ltrim($url['path'], '/'));
     define('DB_PORT', isset($url['port']) ? $url['port'] : 5432);
+    define('DB_TYPE', 'pgsql'); // PostgreSQL on Render
 } else {
     // Local development fallback
     define('DB_HOST', 'localhost');
@@ -17,18 +18,16 @@ if ($db_url) {
     define('DB_PASS', 'YourStrongPassword123!');
     define('DB_NAME', 'Basalo_101');
     define('DB_PORT', 3306);
+    define('DB_TYPE', 'mysql'); // MySQL locally
 }
 
 // Create PDO connection
 function getConnection() {
     try {
-        // Check if it's PostgreSQL (Render) or MySQL (local)
-        if (getenv('DATABASE_URL')) {
-            // PostgreSQL connection for Render
-            $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
-        } else {
-            // MySQL connection for local
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+        $dsn = DB_TYPE . ":host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
+        
+        if (DB_TYPE === 'mysql') {
+            $dsn .= ";charset=utf8mb4";
         }
         
         $conn = new PDO($dsn, DB_USER, DB_PASS);
@@ -40,5 +39,13 @@ function getConnection() {
         error_log("Connection failed: " . $e->getMessage());
         die("Connection failed. Please check database configuration.");
     }
+}
+
+// Helper function to get current timestamp
+function getCurrentTimestamp() {
+    if (DB_TYPE === 'pgsql') {
+        return "CURRENT_TIMESTAMP";
+    }
+    return "NOW()";
 }
 ?>
