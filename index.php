@@ -231,84 +231,170 @@ if (isset($_SESSION['username'])) {
             text-decoration: underline;
         }
 
-        /* ------------------ MOBILE RESPONSIVE ------------------ */
         @media (max-width: 968px) {
-            .navdiv {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+    .navdiv {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px; /* Added padding */
+    }
 
-            .navdiv ul {
-                flex-direction: row;
-                gap: 10px;
-            }
+    .logo a {
+        font-size: 1.4rem; /* Reduced logo size */
+    }
 
-            .navdiv ul li a {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
+    .navdiv ul {
+        flex-direction: row;
+        gap: 8px;
+    }
 
-            .hero-section h1 {
-                font-size: 3rem;
-            }
+    .navdiv ul li a {
+        padding: 8px 14px; /* Slightly smaller padding */
+        font-size: 12px;
+    }
 
-            .hero-section .emoji {
-                font-size: 3.5rem;
-            }
+    .hero-section h1 {
+        font-size: 2.5rem; /* More appropriate size */
+    }
 
-            .hero-section p {
-                font-size: 1.2rem;
-            }
+    .hero-section .emoji {
+        font-size: 3rem;
+    }
 
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
+    .hero-section p {
+        font-size: 1.1rem;
+        padding: 0 15px; /* Add padding */
+    }
 
-            .cta-btn {
-                width: 100%;
-                max-width: 350px;
-                justify-content: center;
-            }
+    .tagline {
+        font-size: 1.1rem;
+        padding: 0 15px; /* Add padding */
+    }
 
-            .features {
-                flex-direction: column;
-                align-items: center;
-            }
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 20px; /* Add padding */
+    }
 
-            .feature {
-                width: 100%;
-                max-width: 350px;
-            }
-        }
+    .cta-btn {
+        width: 100%;
+        max-width: 320px;
+        justify-content: center;
+        padding: 14px 35px; /* Adjusted padding */
+    }
 
-        @media (max-width: 600px) {
-            .hero-section h1 {
-                font-size: 2.2rem;
-            }
+    .features {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 20px; /* Add padding */
+    }
 
-            .hero-section .emoji {
-                font-size: 2.8rem;
-            }
+    .feature {
+        width: 100%;
+        max-width: 320px;
+    }
 
-            .hero-section p {
-                font-size: 1rem;
-            }
+    .main-content {
+        padding: 30px 15px; /* Reduced padding */
+    }
+}
 
-            .tagline {
-                font-size: 1.1rem;
-            }
+@media (max-width: 600px) {
+    .logo a {
+        font-size: 1.2rem; /* Further reduced */
+        gap: 5px;
+    }
 
-            .cta-btn {
-                padding: 14px 35px;
-                font-size: 1rem;
-            }
+    .navdiv {
+        padding: 0 15px;
+    }
 
-            .main-content {
-                padding: 30px 20px;
-            }
-        }
+    .navdiv ul {
+        gap: 6px;
+    }
+
+    .navdiv ul li a {
+        padding: 7px 12px;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .navdiv ul li a i {
+        font-size: 10px; /* Smaller icons */
+    }
+
+    .hero-section h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .hero-section .emoji {
+        font-size: 2.2rem;
+    }
+
+    .hero-section p {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+
+    .tagline {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .cta-btn {
+        padding: 12px 30px;
+        font-size: 0.95rem;
+        max-width: 280px;
+    }
+
+    .main-content {
+        padding: 20px 10px;
+    }
+
+    .feature {
+        padding: 20px 25px;
+        max-width: 280px;
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+    }
+
+    .feature h3 {
+        font-size: 1.1rem;
+    }
+
+    .feature p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+    .logo a {
+        font-size: 1rem;
+    }
+
+    .navdiv ul li a {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    .hero-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-section .emoji {
+        font-size: 1.8rem;
+    }
+
+    .cta-btn {
+        padding: 11px 25px;
+        font-size: 0.9rem;
+    }
+}
 
     </style>
 </head>

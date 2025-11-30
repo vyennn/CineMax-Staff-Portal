@@ -326,60 +326,157 @@ $csrf_token = generateCSRFToken();
     }
     
     @media (max-width: 1200px) {
-        .form-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
+    }
+}
+
+@media (max-width: 968px) {
+    nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px; /* Add padding */
     }
 
-    @media (max-width: 968px) {
-        nav {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .logo {
+        font-size: 1.4rem; /* Reduced */
+    }
 
-        nav ul {
-            flex-direction: row;
-            width: auto;
-            gap: 10px;
-        }
+    nav ul {
+        flex-direction: row;
+        width: auto;
+        gap: 8px;
+    }
 
-        nav ul li a {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
+    nav ul li a {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
 
-        .form-grid, .form-grid-3 {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    .form-grid, .form-grid-3 {
+        grid-template-columns: 1fr; /* Single column for better readability */
+    }
 
-        .wrapper {
-            padding: 30px 25px;
-        }
+    .form-grid-2 {
+        grid-template-columns: 1fr; /* Single column too */
+    }
+
+    .wrapper {
+        padding: 25px 20px;
+        margin: 0 10px; /* Add margin */
+    }
+
+    section {
+        padding: 30px 15px; /* Reduced padding */
+    }
+
+    .wrapper h1 {
+        font-size: 1.7rem; /* Adjusted */
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    input, select {
+        padding: 11px; /* Slightly reduced */
+        font-size: 13px;
+    }
+
+    .field-container label {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    nav {
+        padding: 0 15px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+        gap: 5px;
+    }
+
+    nav ul {
+        gap: 6px;
+    }
+
+    nav ul li a {
+        padding: 7px 12px;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    nav ul li a i {
+        font-size: 10px;
+    }
+
+    .form-grid, .form-grid-3, .form-grid-2 {
+        grid-template-columns: 1fr;
+        gap: 12px; /* Reduced gap */
     }
     
-    @media (max-width: 600px) {
-        .form-grid, .form-grid-3, .form-grid-2 {
-            grid-template-columns: 1fr;
-        }
-        
-        .wrapper {
-            padding: 25px 20px;
-        }
-
-        h4 {
-            font-size: 1.1rem;
-        }
-
-        .wrapper h1 {
-            font-size: 1.6rem;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px 40px;
-        }
+    .wrapper {
+        padding: 20px 15px;
+        margin: 0 5px;
     }
+
+    section {
+        padding: 20px 10px;
+    }
+
+    h4 {
+        font-size: 1rem;
+        gap: 8px;
+    }
+
+    .wrapper h1 {
+        font-size: 1.5rem;
+        gap: 8px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 13px 35px;
+        font-size: 15px;
+    }
+
+    input, select {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .field-container label {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    small {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .logo {
+        font-size: 1rem;
+    }
+
+    nav ul li a {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    .wrapper h1 {
+        font-size: 1.3rem;
+    }
+
+    .submit-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+}
 </style>
 </head>
 <body>

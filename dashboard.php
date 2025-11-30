@@ -933,57 +933,418 @@ $movies = $stmt->fetchAll();
     text-align: center;
 }
 
-        /* Responsive */
-        @media (max-width: 968px) {
-            .menu-toggle {
-                display: block;
-            }
+        /* Add these styles to your existing CSS - Replace the @media sections at the bottom */
 
-           
+/* Tablet & Mobile Responsive */
+@media (max-width: 968px) {
+    .menu-toggle {
+        display: block;
+    }
 
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 82px;
-                z-index: 99;
-                margin-left: -260px;
-            }
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 82px;
+        bottom: 0;
+        z-index: 99;
+        margin-left: -260px;
+        height: calc(100vh - 82px);
+    }
 
-            .sidebar.active {
-                margin-left: 0;
-            }
+    .sidebar.active {
+        margin-left: 0;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+    }
 
-            .main-content {
-                padding: 20px;
-            }
+    .main-content {
+        padding: 20px;
+        width: 100%;
+    }
 
-            table {
-                font-size: 0.85rem;
-            }
+    /* Tables become scrollable */
+    .movies-table {
+        overflow-x: auto;
+    }
 
-            .movie-thumb {
-                width: 40px;
-                height: 60px;
-            }
-        }
+    table {
+        font-size: 0.8rem;
+        min-width: 600px;
+    }
 
-        @media (max-width: 768px) {
-            .header {
-                padding: 15px 20px;
-            }
+    .movie-thumb {
+        width: 40px;
+        height: 60px;
+    }
 
-            .welcome-text {
-                display: none;
-            }
+    th, td {
+        padding: 10px 8px;
+    }
 
-            .section-title {
-                font-size: 1.8rem;
-            }
+    .action-btn {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        margin-right: 3px;
+    }
 
-            .movies-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-        }
+    /* Seat selection becomes single column */
+    .seat-selection-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .booking-info-card {
+        position: static;
+        order: 2;
+    }
+
+    .cinema-container {
+        order: 1;
+        max-height: none;
+    }
+
+    /* Bookings grid */
+    .bookings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Showtimes grid */
+    .showtimes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        max-height: 85vh;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Header adjustments */
+    .header {
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .welcome-text {
+        display: none;
+    }
+
+    .logout-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    /* Section titles */
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    /* Movies grid - 2 columns */
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .movie-image {
+        height: 220px;
+    }
+
+    .movie-info h3 {
+        font-size: 0.95rem;
+    }
+
+    .movie-details {
+        font-size: 0.75rem;
+    }
+
+    /* Manage header */
+    .manage-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .add-movie-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Booking container */
+    .booking-container {
+        padding: 20px;
+    }
+
+    .booking-container h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Seats adjustments */
+    .screen {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .seat-legend {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .seat {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .row-label {
+        width: 25px;
+        font-size: 0.95rem;
+    }
+
+    /* Booking info */
+    .booking-card {
+        padding: 20px;
+    }
+
+    .booking-header h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Form groups */
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Very small screens */
+    .header {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .menu-toggle {
+        font-size: 1.3rem;
+    }
+
+    .logout-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .logout-btn span {
+        display: none;
+    }
+
+    /* Container adjustments */
+    .container {
+        height: calc(100vh - 66px);
+    }
+
+    .sidebar {
+        top: 66px;
+        height: calc(100vh - 66px);
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    /* Movies grid - 1 column on very small screens */
+    .movies-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .movie-image {
+        height: 280px;
+    }
+
+    /* Seats - make them smaller */
+    .seat {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
+    .row-label {
+        width: 20px;
+        font-size: 0.85rem;
+    }
+
+    .seat-row {
+        gap: 5px;
+    }
+
+    /* Available/Selected/Booked demos */
+    .available-demo,
+    .selected-demo,
+    .booked-demo {
+        width: 25px;
+        height: 25px;
+    }
+
+    .legend-item {
+        font-size: 0.8rem;
+    }
+
+    /* Buttons */
+    .save-btn,
+    .confirm-booking-btn,
+    .cancel-booking-btn,
+    .back-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        padding: 15px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Booking cards */
+    .booking-card {
+        padding: 15px;
+    }
+
+    .detail-row {
+        font-size: 0.9rem;
+    }
+
+    /* Info rows */
+    .info-row {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+    }
+
+    .info-value {
+        text-align: left;
+    }
+
+    /* Time slots */
+    .time-slots {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Landscape mode for mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .header {
+        padding: 10px 20px;
+    }
+
+    .container {
+        height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+        top: 60px;
+        height: calc(100vh - 60px);
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .main-content {
+        padding: 15px;
+    }
+
+    .cinema-container {
+        max-height: none;
+        padding: 20px;
+    }
+}
+
+/* Fix for iOS Safari viewport height */
+@supports (-webkit-touch-callout: none) {
+    .container {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Prevent text selection on buttons */
+button {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* Better touch targets */
+@media (max-width: 768px) {
+    .seat {
+        min-width: 32px;
+        min-height: 32px;
+    }
+
+    .sidebar-menu a {
+        padding: 18px 30px;
+    }
+
+    .action-btn {
+        min-height: 32px;
+    }
+}
+
+/* Loading state for mobile */
+.save-btn:disabled,
+.confirm-booking-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+.sidebar::-webkit-scrollbar,
+.main-content::-webkit-scrollbar,
+.cinema-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.main-content::-webkit-scrollbar-track,
+.cinema-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb,
+.cinema-container::-webkit-scrollbar-thumb {
+    background: rgba(234, 88, 12, 0.3);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.main-content::-webkit-scrollbar-thumb:hover,
+.cinema-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(234, 88, 12, 0.5);
+}
     </style>
 </head>
 <body>

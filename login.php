@@ -462,73 +462,159 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 10px;
         }
 
-        /* RESPONSIVE MEDIA QUERY */
         @media (max-width: 968px) {
-            .main-container {
-                flex-direction: column;
-                padding: 30px 20px;
-                justify-content: center;
-                align-items: center;
-            }
+    .main-container {
+        flex-direction: column;
+        padding: 20px 15px; /* Reduced padding */
+        justify-content: center;
+        align-items: center;
+    }
 
-            .content {
-                text-align: center;
-                padding-right: 0;
-                margin-bottom: 30px;
-            }
+    .content {
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 25px;
+        padding: 0 15px; /* Add horizontal padding */
+    }
 
-            .content h1 {
-                font-size: 2.2rem;
-            }
+    .content h1 {
+        font-size: 2rem; /* More readable size */
+        line-height: 1.3;
+    }
 
-            .movie-icons {
-                font-size: 2rem;
-                justify-content: center;
-            }
+    .content p {
+        font-size: 1rem; /* Adjusted */
+    }
 
-            .form-container {
-                width: 95%;
-                max-width: 450px;
-                padding: 30px;
-            }
+    .movie-icons {
+        font-size: 1.8rem; /* Slightly smaller */
+        justify-content: center;
+    }
 
-            nav {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+    .form-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 25px;
+    }
 
-            nav ul {
-                flex-direction: row;
-                width: auto;
-                gap: 10px;
-            }
+    nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px; /* Add padding */
+    }
 
-            nav ul li a {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-        }
+    .logo {
+        font-size: 1.4rem; /* Reduced */
+    }
 
-        @media (max-width: 600px) {
-            .content h1 {
-                font-size: 1.8rem;
-            }
+    nav ul {
+        flex-direction: row;
+        width: auto;
+        gap: 8px;
+    }
 
-            .form-container {
-                padding: 25px;
-            }
+    nav ul li a {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
 
-            .btn {
-                font-size: 16px;
-                padding: 14px;
-            }
+    .field input {
+        padding: 12px; /* Slightly reduced */
+    }
+}
 
-            .field input {
-                font-size: 14px;
-                padding: 12px;
-            }
-        }
+@media (max-width: 600px) {
+    nav {
+        padding: 0 15px;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+        gap: 5px;
+    }
+
+    nav ul {
+        gap: 6px;
+    }
+
+    nav ul li a {
+        padding: 7px 12px;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    nav ul li a i {
+        font-size: 10px;
+    }
+
+    .content h1 {
+        font-size: 1.6rem;
+    }
+
+    .content p {
+        font-size: 0.9rem;
+    }
+
+    .movie-icons {
+        font-size: 1.5rem;
+    }
+
+    .form-container {
+        padding: 20px;
+        max-width: 100%;
+        margin: 0 10px; /* Add margin */
+    }
+
+    .text h5 {
+        font-size: 1.6rem;
+    }
+
+    .btn {
+        font-size: 15px;
+        padding: 13px;
+    }
+
+    .field input {
+        font-size: 13px;
+        padding: 11px;
+    }
+
+    .field label {
+        font-size: 13px;
+    }
+
+    .show-password-container label {
+        font-size: 13px;
+    }
+
+    .main-container {
+        padding: 15px 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .logo {
+        font-size: 1rem;
+    }
+
+    nav ul li a {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    .content h1 {
+        font-size: 1.4rem;
+    }
+
+    .form-container {
+        padding: 18px;
+    }
+
+    .text h5 {
+        font-size: 1.4rem;
+    }
+}
     </style>
 </head>
 <body>
