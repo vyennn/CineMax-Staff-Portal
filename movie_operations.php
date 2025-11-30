@@ -1,5 +1,4 @@
 <?php //movie_operations.php
-// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -7,7 +6,7 @@ $require_login = true;
 require_once 'secure_session.php';
 require_once 'config.php';
 
-// At this point, user is guaranteed to be logged in
+header('Content-Type: application/json');
 
 try {
     $conn = getConnection();
@@ -51,19 +50,16 @@ try {
         $rating = $_POST['rating'] ?? 0;
         $status = $_POST['status'] ?? 'showing';
         
-        // Validate required fields
         if (empty($title) || empty($duration) || empty($genre)) {
             echo json_encode(['success' => false, 'message' => 'Please fill all required fields']);
             exit();
         }
         
-        // Handle image upload
         $image_path = 'images/default-movie.jpg';
         
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
             $upload_dir = 'images/';
             
-            // Create directory if it doesn't exist
             if (!is_dir($upload_dir)) {
                 if (!mkdir($upload_dir, 0777, true)) {
                     echo json_encode(['success' => false, 'message' => 'Failed to create images directory']);
@@ -71,9 +67,8 @@ try {
                 }
             }
             
-            // Check if directory is writable
             if (!is_writable($upload_dir)) {
-                echo json_encode(['success' => false, 'message' => 'Images directory is not writable. Please set permissions to 777']);
+                echo json_encode(['success' => false, 'message' => 'Images directory is not writable']);
                 exit();
             }
             
@@ -81,7 +76,7 @@ try {
             $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
             
             if (!in_array($file_extension, $allowed_extensions)) {
-                echo json_encode(['success' => false, 'message' => 'Invalid file type. Please upload JPG, PNG or GIF']);
+                echo json_encode(['success' => false, 'message' => 'Invalid file type']);
                 exit();
             }
             
@@ -96,7 +91,7 @@ try {
             }
         }
         
-        $sql = "INSERT INTO movies (title, duration, genre, rating, image_path, status) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO movies (title, duration, genre, rating, image_path, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         
         if (!$stmt) {
@@ -123,13 +118,11 @@ try {
         $rating = $_POST['rating'] ?? 0;
         $status = $_POST['status'] ?? 'showing';
         
-        // Validate required fields
         if (empty($title) || empty($duration) || empty($genre) || empty($id)) {
             echo json_encode(['success' => false, 'message' => 'Please fill all required fields']);
             exit();
         }
         
-        // Check if new image is uploaded
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
             $upload_dir = 'images/';
             
@@ -141,7 +134,7 @@ try {
             $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
             
             if (!in_array($file_extension, $allowed_extensions)) {
-                echo json_encode(['success' => false, 'message' => 'Invalid file type. Please upload JPG, PNG or GIF']);
+                echo json_encode(['success' => false, 'message' => 'Invalid file type']);
                 exit();
             }
             
@@ -149,7 +142,6 @@ try {
             $upload_path = $upload_dir . $new_filename;
             
             if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-                // Delete old image
                 $old_sql = "SELECT image_path FROM movies WHERE id = ?";
                 $old_stmt = $conn->prepare($old_sql);
                 $old_stmt->bind_param("i", $id);
@@ -158,7 +150,7 @@ try {
                 $old_movie = $old_result->fetch_assoc();
                 
                 if ($old_movie && file_exists($old_movie['image_path']) && $old_movie['image_path'] !== 'images/default-movie.jpg') {
-                    unlink($old_movie['image_path']);
+                    @unlink($old_movie['image_path']);
                 }
                 
                 $sql = "UPDATE movies SET title = ?, duration = ?, genre = ?, rating = ?, image_path = ?, status = ? WHERE id = ?";
@@ -209,7 +201,6 @@ try {
             exit();
         }
         
-        // Get image path to delete file
         $sql = "SELECT image_path FROM movies WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
@@ -217,15 +208,13 @@ try {
         $result = $stmt->get_result();
         $movie = $result->fetch_assoc();
         
-        // Delete from database
         $delete_sql = "DELETE FROM movies WHERE id = ?";
         $delete_stmt = $conn->prepare($delete_sql);
         $delete_stmt->bind_param("i", $id);
         
         if ($delete_stmt->execute()) {
-            // Delete image file
             if ($movie && file_exists($movie['image_path']) && $movie['image_path'] !== 'images/default-movie.jpg') {
-                unlink($movie['image_path']);
+                @unlink($movie['image_path']);
             }
             
             echo json_encode(['success' => true, 'message' => 'Movie deleted successfully!']);
@@ -235,7 +224,6 @@ try {
         exit();
     }
 
-    // If no valid action
     echo json_encode(['success' => false, 'message' => 'Invalid action']);
 
 } catch (Exception $e) {
