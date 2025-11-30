@@ -1875,5 +1875,3 @@ $movies = $result->fetchAll(PDO::FETCH_ASSOC);
     </script>
 </body>
 </html>
-
-<?php $conn = null(); ?>
