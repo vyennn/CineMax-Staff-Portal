@@ -8,9 +8,8 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-// Check if user is logged in
 if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized. Please login.']);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
 
@@ -23,31 +22,28 @@ try {
     
     $username = $_SESSION['username'];
 
-    // Get booked seats for a specific movie/showtime
+    // Get booked seats
     if (isset($_GET['action']) && $_GET['action'] === 'get_booked') {
         $movieId = intval($_GET['movie_id'] ?? 0);
         $date = $_GET['date'] ?? '';
         $showtime = $_GET['showtime'] ?? '';
         
         if (empty($movieId) || empty($date) || empty($showtime)) {
-            echo json_encode(['success' => false, 'message' => 'Missing required parameters']);
+            echo json_encode(['success' => false, 'message' => 'Missing parameters']);
             exit();
         }
         
         $sql = "SELECT seat_number FROM seat_bookings 
-                WHERE movie_id = ? AND booking_date = ? AND showtime = ? AND status = 'booked'";
+                WHERE movie_id = :movie_id AND booking_date = :date AND showtime = :showtime AND status = 'booked'";
         $stmt = $conn->prepare($sql);
-        
-        if (!$stmt) {
-            throw new Exception('Query preparation failed: ' . $conn->error);
-        }
-        
-        $stmt->bind_param("iss", $movieId, $date, $showtime);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->execute([
+            'movie_id' => $movieId,
+            'date' => $date,
+            'showtime' => $showtime
+        ]);
         
         $bookedSeats = [];
-        while ($row = $result->fetch_assoc()) {
+        while ($row = $stmt->fetch()) {
             $bookedSeats[] = $row['seat_number'];
         }
         
@@ -60,22 +56,12 @@ try {
         $sql = "SELECT b.*, m.title as movie_title, m.image_path 
                 FROM bookings b 
                 LEFT JOIN movies m ON b.movie_id = m.id 
-                WHERE b.user_id = ? 
+                WHERE b.user_id = :username 
                 ORDER BY b.created_at DESC";
         $stmt = $conn->prepare($sql);
+        $stmt->execute(['username' => $username]);
         
-        if (!$stmt) {
-            throw new Exception('Query preparation failed: ' . $conn->error);
-        }
-        
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        $bookings = [];
-        while ($row = $result->fetch_assoc()) {
-            $bookings[] = $row;
-        }
+        $bookings = $stmt->fetchAll();
         
         echo json_encode(['success' => true, 'data' => $bookings]);
         exit();
@@ -86,7 +72,7 @@ try {
     $data = json_decode($input, true);
     
     if (json_last_error() !== JSON_ERROR_NONE) {
-        echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON']);
         exit();
     }
     
@@ -101,17 +87,15 @@ try {
         $seats = trim($data['seats'] ?? '');
         $totalAmount = floatval($data['total_amount'] ?? 0);
         
-        // Validate input
         if (empty($movieId) || empty($movieTitle) || empty($showtime) || empty($bookingDate) || empty($seats)) {
-            echo json_encode(['success' => false, 'message' => 'Missing required booking information']);
+            echo json_encode(['success' => false, 'message' => 'Missing booking information']);
             exit();
         }
         
-        // Start transaction
-        $conn->begin_transaction();
+        $conn->beginTransaction();
         
         try {
-            // Check if seats are still available
+            // Check if seats are available
             $seatArray = array_map('trim', explode(',', $seats));
             $placeholders = str_repeat('?,', count($seatArray) - 1) . '?';
             
@@ -120,35 +104,30 @@ try {
                         AND seat_number IN ($placeholders) AND status = 'booked'";
             
             $checkStmt = $conn->prepare($checkSql);
+            $checkParams = array_merge([$movieId, $showtime, $bookingDate], $seatArray);
+            $checkStmt->execute($checkParams);
             
-            $types = 'iss' . str_repeat('s', count($seatArray));
-            $params = array_merge([$movieId, $showtime, $bookingDate], $seatArray);
-            $checkStmt->bind_param($types, ...$params);
-            $checkStmt->execute();
-            $checkResult = $checkStmt->get_result();
-            
-            if ($checkResult->num_rows > 0) {
-                $conn->rollback();
-                echo json_encode(['success' => false, 'message' => 'Some seats are already booked. Please select different seats.']);
+            if ($checkStmt->rowCount() > 0) {
+                $conn->rollBack();
+                echo json_encode(['success' => false, 'message' => 'Some seats are already booked']);
                 exit();
             }
             
-            // Insert booking record
+            // Insert booking
             $sql = "INSERT INTO bookings (user_id, movie_id, movie_title, showtime, booking_date, seats, total_amount, booking_status, created_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, 'confirmed', NOW())";
+                    VALUES (:user_id, :movie_id, :movie_title, :showtime, :booking_date, :seats, :total_amount, 'confirmed', NOW())";
             $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                'user_id' => $username,
+                'movie_id' => $movieId,
+                'movie_title' => $movieTitle,
+                'showtime' => $showtime,
+                'booking_date' => $bookingDate,
+                'seats' => $seats,
+                'total_amount' => $totalAmount
+            ]);
             
-            if (!$stmt) {
-                throw new Exception('Failed to prepare booking statement: ' . $conn->error);
-            }
-            
-            $stmt->bind_param("sissssd", $username, $movieId, $movieTitle, $showtime, $bookingDate, $seats, $totalAmount);
-            
-            if (!$stmt->execute()) {
-                throw new Exception('Failed to create booking: ' . $stmt->error);
-            }
-            
-            $bookingId = $conn->insert_id;
+            $bookingId = $conn->lastInsertId();
             
             // Insert seat bookings
             foreach ($seatArray as $seat) {
@@ -156,31 +135,23 @@ try {
                 if (empty($seat)) continue;
                 
                 $seatSql = "INSERT INTO seat_bookings (booking_id, movie_id, showtime, booking_date, seat_number, status, booked_by, created_at) 
-                            VALUES (?, ?, ?, ?, ?, 'booked', ?, NOW())
-                            ON DUPLICATE KEY UPDATE status = 'booked', booked_by = ?, booking_id = ?";
+                            VALUES (:booking_id, :movie_id, :showtime, :booking_date, :seat_number, 'booked', :booked_by, NOW())";
                 $seatStmt = $conn->prepare($seatSql);
-                
-                if (!$seatStmt) {
-                    throw new Exception('Failed to prepare seat booking: ' . $conn->error);
-                }
-                
-                $seatStmt->bind_param("iissssi", $bookingId, $movieId, $showtime, $bookingDate, $seat, $username, $username, $bookingId);
-                
-                if (!$seatStmt->execute()) {
-                    throw new Exception('Failed to book seat ' . $seat . ': ' . $seatStmt->error);
-                }
+                $seatStmt->execute([
+                    'booking_id' => $bookingId,
+                    'movie_id' => $movieId,
+                    'showtime' => $showtime,
+                    'booking_date' => $bookingDate,
+                    'seat_number' => $seat,
+                    'booked_by' => $username
+                ]);
             }
             
-            // Commit transaction
             $conn->commit();
-            echo json_encode([
-                'success' => true, 
-                'message' => 'Booking confirmed successfully!',
-                'booking_id' => $bookingId
-            ]);
+            echo json_encode(['success' => true, 'message' => 'Booking confirmed!', 'booking_id' => $bookingId]);
             
         } catch (Exception $e) {
-            $conn->rollback();
+            $conn->rollBack();
             error_log('Booking error: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Booking failed: ' . $e->getMessage()]);
         }
@@ -197,66 +168,38 @@ try {
             exit();
         }
         
-        // Start transaction
-        $conn->begin_transaction();
+        $conn->beginTransaction();
         
         try {
             // Get booking details
-            $sql = "SELECT * FROM bookings WHERE id = ? AND user_id = ?";
+            $sql = "SELECT * FROM bookings WHERE id = :id AND user_id = :username";
             $stmt = $conn->prepare($sql);
-            
-            if (!$stmt) {
-                throw new Exception('Failed to prepare query: ' . $conn->error);
-            }
-            
-            $stmt->bind_param("is", $bookingId, $username);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $booking = $result->fetch_assoc();
+            $stmt->execute(['id' => $bookingId, 'username' => $username]);
+            $booking = $stmt->fetch();
             
             if (!$booking) {
-                throw new Exception('Booking not found or you do not have permission to cancel it');
+                throw new Exception('Booking not found');
             }
             
-            // Check if booking is already cancelled
             if ($booking['booking_status'] === 'cancelled') {
-                throw new Exception('This booking is already cancelled');
+                throw new Exception('Booking already cancelled');
             }
             
             // Update booking status
-            $updateSql = "UPDATE bookings SET booking_status = 'cancelled' WHERE id = ?";
+            $updateSql = "UPDATE bookings SET booking_status = 'cancelled' WHERE id = :id";
             $updateStmt = $conn->prepare($updateSql);
+            $updateStmt->execute(['id' => $bookingId]);
             
-            if (!$updateStmt) {
-                throw new Exception('Failed to prepare update: ' . $conn->error);
-            }
-            
-            $updateStmt->bind_param("i", $bookingId);
-            
-            if (!$updateStmt->execute()) {
-                throw new Exception('Failed to update booking: ' . $updateStmt->error);
-            }
-            
-            // Delete seat bookings (CASCADE will handle this, but we'll do it explicitly for clarity)
-            $deleteSql = "DELETE FROM seat_bookings WHERE booking_id = ?";
+            // Delete seat bookings
+            $deleteSql = "DELETE FROM seat_bookings WHERE booking_id = :booking_id";
             $deleteStmt = $conn->prepare($deleteSql);
+            $deleteStmt->execute(['booking_id' => $bookingId]);
             
-            if (!$deleteStmt) {
-                throw new Exception('Failed to prepare seat deletion: ' . $conn->error);
-            }
-            
-            $deleteStmt->bind_param("i", $bookingId);
-            
-            if (!$deleteStmt->execute()) {
-                throw new Exception('Failed to free seats: ' . $deleteStmt->error);
-            }
-            
-            // Commit transaction
             $conn->commit();
             echo json_encode(['success' => true, 'message' => 'Booking cancelled successfully']);
             
         } catch (Exception $e) {
-            $conn->rollback();
+            $conn->rollBack();
             error_log('Cancellation error: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
@@ -264,15 +207,10 @@ try {
         exit();
     }
 
-    // Invalid action
     echo json_encode(['success' => false, 'message' => 'Invalid action']);
 
 } catch (Exception $e) {
     error_log('Seat operations error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-}
-
-if (isset($conn) && $conn) {
-    $conn->close();
 }
 ?>

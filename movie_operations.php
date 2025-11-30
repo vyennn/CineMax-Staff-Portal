@@ -20,16 +20,8 @@ try {
     // List all movies
     if ($action === 'list') {
         $sql = "SELECT * FROM movies ORDER BY created_at DESC";
-        $result = $conn->query($sql);
-        
-        if (!$result) {
-            throw new Exception('Query failed: ' . $conn->error);
-        }
-        
-        $movies = [];
-        while ($row = $result->fetch_assoc()) {
-            $movies[] = $row;
-        }
+        $stmt = $conn->query($sql);
+        $movies = $stmt->fetchAll();
         
         echo json_encode(['success' => true, 'data' => $movies]);
         exit();
@@ -44,17 +36,10 @@ try {
             exit();
         }
         
-        $sql = "SELECT * FROM movies WHERE id = ?";
+        $sql = "SELECT * FROM movies WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        
-        if (!$stmt) {
-            throw new Exception('Query preparation failed: ' . $conn->error);
-        }
-        
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $movie = $result->fetch_assoc();
+        $stmt->execute(['id' => $id]);
+        $movie = $stmt->fetch();
         
         if ($movie) {
             echo json_encode(['success' => true, 'data' => $movie]);
@@ -84,7 +69,6 @@ try {
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = __DIR__ . '/images/';
             
-            // Create images directory if it doesn't exist
             if (!is_dir($upload_dir)) {
                 if (!mkdir($upload_dir, 0755, true)) {
                     echo json_encode(['success' => false, 'message' => 'Failed to create images directory']);
@@ -92,56 +76,51 @@ try {
                 }
             }
             
-            // Check if directory is writable
             if (!is_writable($upload_dir)) {
-                echo json_encode(['success' => false, 'message' => 'Images directory is not writable. Check permissions.']);
+                echo json_encode(['success' => false, 'message' => 'Images directory is not writable']);
                 exit();
             }
             
-            // Validate file type
             $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
             $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             
             if (!in_array($file_extension, $allowed_extensions)) {
-                echo json_encode(['success' => false, 'message' => 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp']);
+                echo json_encode(['success' => false, 'message' => 'Invalid file type']);
                 exit();
             }
             
-            // Validate file size (max 5MB)
             if ($_FILES['image']['size'] > 5 * 1024 * 1024) {
-                echo json_encode(['success' => false, 'message' => 'File too large. Maximum size is 5MB']);
+                echo json_encode(['success' => false, 'message' => 'File too large. Maximum 5MB']);
                 exit();
             }
             
-            // Generate unique filename
             $new_filename = 'movie_' . time() . '_' . uniqid() . '.' . $file_extension;
             $upload_path = $upload_dir . $new_filename;
             
-            // Move uploaded file
             if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-                $image_path = 'images/' . $new_filename; // Store relative path
+                $image_path = 'images/' . $new_filename;
             } else {
-                $error_code = $_FILES['image']['error'];
-                echo json_encode(['success' => false, 'message' => 'Failed to upload image. Error code: ' . $error_code]);
+                echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
                 exit();
             }
         }
         
         // Insert into database
-        $sql = "INSERT INTO movies (title, duration, genre, rating, image_path, status, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO movies (title, duration, genre, rating, image_path, status, created_at) 
+                VALUES (:title, :duration, :genre, :rating, :image_path, :status, NOW())";
         $stmt = $conn->prepare($sql);
         
-        if (!$stmt) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
-            exit();
-        }
-        
-        $stmt->bind_param("sssdss", $title, $duration, $genre, $rating, $image_path, $status);
-        
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Movie added successfully!', 'id' => $conn->insert_id]);
+        if ($stmt->execute([
+            'title' => $title,
+            'duration' => $duration,
+            'genre' => $genre,
+            'rating' => $rating,
+            'image_path' => $image_path,
+            'status' => $status
+        ])) {
+            echo json_encode(['success' => true, 'message' => 'Movie added successfully!', 'id' => $conn->lastInsertId()]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to add movie: ' . $stmt->error]);
+            echo json_encode(['success' => false, 'message' => 'Failed to add movie']);
         }
         exit();
     }
@@ -177,7 +156,7 @@ try {
             }
             
             if ($_FILES['image']['size'] > 5 * 1024 * 1024) {
-                echo json_encode(['success' => false, 'message' => 'File too large. Maximum size is 5MB']);
+                echo json_encode(['success' => false, 'message' => 'File too large']);
                 exit();
             }
             
@@ -185,15 +164,13 @@ try {
             $upload_path = $upload_dir . $new_filename;
             
             if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-                // Get old image path to delete it
-                $old_sql = "SELECT image_path FROM movies WHERE id = ?";
+                // Get old image
+                $old_sql = "SELECT image_path FROM movies WHERE id = :id";
                 $old_stmt = $conn->prepare($old_sql);
-                $old_stmt->bind_param("i", $id);
-                $old_stmt->execute();
-                $old_result = $old_stmt->get_result();
-                $old_movie = $old_result->fetch_assoc();
+                $old_stmt->execute(['id' => $id]);
+                $old_movie = $old_stmt->fetch();
                 
-                // Delete old image if it exists and is not the default
+                // Delete old image
                 if ($old_movie && !empty($old_movie['image_path']) && $old_movie['image_path'] !== 'images/default-movie.jpg') {
                     $old_image_full_path = __DIR__ . '/' . $old_movie['image_path'];
                     if (file_exists($old_image_full_path)) {
@@ -204,29 +181,42 @@ try {
                 $image_path = 'images/' . $new_filename;
                 
                 // Update with new image
-                $sql = "UPDATE movies SET title = ?, duration = ?, genre = ?, rating = ?, image_path = ?, status = ?, updated_at = NOW() WHERE id = ?";
+                $sql = "UPDATE movies SET title = :title, duration = :duration, genre = :genre, 
+                        rating = :rating, image_path = :image_path, status = :status, updated_at = NOW() 
+                        WHERE id = :id";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("sssdssi", $title, $duration, $genre, $rating, $image_path, $status, $id);
+                $result = $stmt->execute([
+                    'title' => $title,
+                    'duration' => $duration,
+                    'genre' => $genre,
+                    'rating' => $rating,
+                    'image_path' => $image_path,
+                    'status' => $status,
+                    'id' => $id
+                ]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
                 exit();
             }
         } else {
             // Update without changing image
-            $sql = "UPDATE movies SET title = ?, duration = ?, genre = ?, rating = ?, status = ?, updated_at = NOW() WHERE id = ?";
+            $sql = "UPDATE movies SET title = :title, duration = :duration, genre = :genre, 
+                    rating = :rating, status = :status, updated_at = NOW() WHERE id = :id";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssdsi", $title, $duration, $genre, $rating, $status, $id);
+            $result = $stmt->execute([
+                'title' => $title,
+                'duration' => $duration,
+                'genre' => $genre,
+                'rating' => $rating,
+                'status' => $status,
+                'id' => $id
+            ]);
         }
         
-        if (!$stmt) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
-            exit();
-        }
-        
-        if ($stmt->execute()) {
+        if ($result) {
             echo json_encode(['success' => true, 'message' => 'Movie updated successfully!']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update movie: ' . $stmt->error]);
+            echo json_encode(['success' => false, 'message' => 'Failed to update movie']);
         }
         exit();
     }
@@ -241,21 +231,14 @@ try {
             exit();
         }
         
-        $sql = "UPDATE movies SET status = ?, updated_at = NOW() WHERE id = ?";
+        $sql = "UPDATE movies SET status = :status, updated_at = NOW() WHERE id = :id";
         $stmt = $conn->prepare($sql);
         
-        if (!$stmt) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
-            exit();
-        }
-        
-        $stmt->bind_param("si", $status, $id);
-        
-        if ($stmt->execute()) {
+        if ($stmt->execute(['status' => $status, 'id' => $id])) {
             $message = $status === 'showing' ? 'Movie is now showing' : 'Movie is now hidden';
             echo json_encode(['success' => true, 'message' => $message]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update status: ' . $stmt->error]);
+            echo json_encode(['success' => false, 'message' => 'Failed to update status']);
         }
         exit();
     }
@@ -269,21 +252,18 @@ try {
             exit();
         }
         
-        // Get movie details first
-        $sql = "SELECT image_path FROM movies WHERE id = ?";
+        // Get movie details
+        $sql = "SELECT image_path FROM movies WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $movie = $result->fetch_assoc();
+        $stmt->execute(['id' => $id]);
+        $movie = $stmt->fetch();
         
         // Delete from database
-        $delete_sql = "DELETE FROM movies WHERE id = ?";
+        $delete_sql = "DELETE FROM movies WHERE id = :id";
         $delete_stmt = $conn->prepare($delete_sql);
-        $delete_stmt->bind_param("i", $id);
         
-        if ($delete_stmt->execute()) {
-            // Delete image file if it exists and is not the default
+        if ($delete_stmt->execute(['id' => $id])) {
+            // Delete image file
             if ($movie && !empty($movie['image_path']) && $movie['image_path'] !== 'images/default-movie.jpg') {
                 $image_full_path = __DIR__ . '/' . $movie['image_path'];
                 if (file_exists($image_full_path)) {
@@ -293,7 +273,7 @@ try {
             
             echo json_encode(['success' => true, 'message' => 'Movie deleted successfully!']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to delete movie: ' . $delete_stmt->error]);
+            echo json_encode(['success' => false, 'message' => 'Failed to delete movie']);
         }
         exit();
     }
@@ -303,9 +283,5 @@ try {
 } catch (Exception $e) {
     error_log('Movie operations error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-}
-
-if (isset($conn)) {
-    $conn->close();
 }
 ?>
