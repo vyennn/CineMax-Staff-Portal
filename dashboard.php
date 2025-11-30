@@ -1,14 +1,19 @@
 <?php //dashboard.php
 $require_login = true;
 require_once 'secure_session.php';
-require_once 'db.php';
+require_once 'config.php';
 
 $username = $_SESSION['username'];
 
 $conn = getConnection();
 $sql = "SELECT * FROM movies WHERE status = 'showing' ORDER BY created_at DESC";
 $result = $conn->query($sql);
-$movies = $result->fetchAll(PDO::FETCH_ASSOC);
+$movies = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $movies[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
