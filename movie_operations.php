@@ -17,17 +17,18 @@ try {
     
     $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
-    // List all movies
+    // List all movies - FIXED
     if ($action === 'list') {
         $sql = "SELECT * FROM movies ORDER BY created_at DESC";
         $stmt = $conn->query($sql);
         $movies = $stmt->fetchAll();
         
-        echo json_encode(['success' => true, 'data' => $movies]);
+        // Return array directly, not wrapped in object
+        echo json_encode($movies);
         exit();
     }
 
-    // Get single movie
+    // Get single movie - FIXED
     if ($action === 'get') {
         $id = intval($_GET['id'] ?? 0);
         
@@ -42,7 +43,8 @@ try {
         $movie = $stmt->fetch();
         
         if ($movie) {
-            echo json_encode(['success' => true, 'data' => $movie]);
+            // Return movie object directly
+            echo json_encode($movie);
         } else {
             echo json_encode(['success' => false, 'message' => 'Movie not found']);
         }

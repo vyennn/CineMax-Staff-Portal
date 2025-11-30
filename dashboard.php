@@ -1880,63 +1880,74 @@ html {
 
         // Load my bookings
         function loadMyBookings() {
-            fetch('seat_operations.php?action=my_bookings')
-                .then(response => response.json())
-                .then(bookings => {
-                    const container = document.getElementById('bookingsContainer');
-                    
-                    if (bookings.length === 0) {
-                        container.innerHTML = '<p style="color: white; text-align: center;">No bookings found.</p>';
-                        return;
-                    }
-                    
-                    let html = '<div class="bookings-grid">';
-                    bookings.forEach(booking => {
-                        const status = booking.booking_status || 'confirmed';
-                        const statusClass = status === 'cancelled' ? 'cancelled' : 'confirmed';
-                        
-                        html += `
-                            <div class="booking-card ${statusClass}">
-                                <div class="booking-header">
-                                    <h3>${booking.movie_title}</h3>
-                                    <span class="booking-status ${statusClass}">${status.toUpperCase()}</span>
-                                </div>
-                                <div class="booking-details">
-                                    <div class="detail-row">
-                                        <i class="fas fa-calendar"></i>
-                                        <span>${formatDate(booking.booking_date)}</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <i class="fas fa-clock"></i>
-                                        <span>${booking.showtime}</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <i class="fas fa-chair"></i>
-                                        <span>Seats: ${booking.seats}</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <i class="fas fa-money-bill"></i>
-                                        <span>Total: ₱${parseFloat(booking.total_amount).toFixed(2)}</span>
-                                    </div>
-                                </div>
-                                ${status !== 'cancelled' ? `
-                                    <button class="cancel-booking-btn" onclick="cancelBooking(${booking.id})">
-                                        <i class="fas fa-times-circle"></i> Cancel Booking
-                                    </button>
-                                ` : ''}
+    fetch('seat_operations.php?action=my_bookings')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(bookings => {
+            console.log('Bookings data:', bookings); // Debug log
+            
+            const container = document.getElementById('bookingsContainer');
+            
+            if (!Array.isArray(bookings)) {
+                throw new Error('Invalid bookings data');
+            }
+            
+            if (bookings.length === 0) {
+                container.innerHTML = '<p style="color: white; text-align: center;">No bookings found.</p>';
+                return;
+            }
+            
+            let html = '<div class="bookings-grid">';
+            bookings.forEach(booking => {
+                const status = booking.booking_status || 'confirmed';
+                const statusClass = status === 'cancelled' ? 'cancelled' : 'confirmed';
+                
+                html += `
+                    <div class="booking-card ${statusClass}">
+                        <div class="booking-header">
+                            <h3>${booking.movie_title}</h3>
+                            <span class="booking-status ${statusClass}">${status.toUpperCase()}</span>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-row">
+                                <i class="fas fa-calendar"></i>
+                                <span>${formatDate(booking.booking_date)}</span>
                             </div>
-                        `;
-                    });
-                    html += '</div>';
-                    
-                    container.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Error loading bookings:', error);
-                    document.getElementById('bookingsContainer').innerHTML = 
-                        '<p style="color: white; text-align: center;">Error loading bookings.</p>';
-                });
-        }
+                            <div class="detail-row">
+                                <i class="fas fa-clock"></i>
+                                <span>${booking.showtime}</span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-chair"></i>
+                                <span>Seats: ${booking.seats}</span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-money-bill"></i>
+                                <span>Total: ₱${parseFloat(booking.total_amount).toFixed(2)}</span>
+                            </div>
+                        </div>
+                        ${status !== 'cancelled' ? `
+                            <button class="cancel-booking-btn" onclick="cancelBooking(${booking.id})">
+                                <i class="fas fa-times-circle"></i> Cancel Booking
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading bookings:', error);
+            document.getElementById('bookingsContainer').innerHTML = 
+                '<p style="color: white; text-align: center;">Error loading bookings. Please refresh the page.</p>';
+        });
+}
 
         // Cancel booking
         function cancelBooking(bookingId) {
@@ -1969,82 +1980,114 @@ html {
             });
         }
 
-        // Load movies table
         function loadMoviesTable() {
-            fetch('movie_operations.php?action=list')
-                .then(response => response.json())
-                .then(data => {
-                    let html = `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Title</th>
-                                    <th>Duration</th>
-                                    <th>Genre</th>
-                                    <th>Rating</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+    fetch('movie_operations.php?action=list')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Movies data:', data); // Debug log
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Duration</th>
+                            <th>Genre</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(movie => {
+                    html += `
+                        <tr>
+                            <td><img src="${movie.image_path}" alt="${movie.title}" class="movie-thumb"></td>
+                            <td>${movie.title}</td>
+                            <td>${movie.duration}</td>
+                            <td>${movie.genre}</td>
+                            <td>⭐ ${movie.rating}/10</td>
+                            <td><span class="status-badge ${movie.status === 'showing' ? 'status-showing' : 'status-hidden'}">${movie.status === 'showing' ? 'Showing' : 'Hidden'}</span></td>
+                            <td>
+                                <button class="action-btn edit-btn" onclick="editMovie(${movie.id})"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="action-btn toggle-btn" onclick="toggleMovie(${movie.id}, '${movie.status}')">
+                                    <i class="fas fa-eye${movie.status === 'showing' ? '-slash' : ''}"></i> ${movie.status === 'showing' ? 'Hide' : 'Show'}
+                                </button>
+                                <button class="action-btn delete-btn" onclick="deleteMovie(${movie.id})"><i class="fas fa-trash"></i> Delete</button>
+                            </td>
+                        </tr>
                     `;
-                    
-                    if (data.length > 0) {
-                        data.forEach(movie => {
-                            html += `
-                                <tr>
-                                    <td><img src="${movie.image_path}" alt="${movie.title}" class="movie-thumb"></td>
-                                    <td>${movie.title}</td>
-                                    <td>${movie.duration}</td>
-                                    <td>${movie.genre}</td>
-                                    <td>⭐ ${movie.rating}/10</td>
-                                    <td><span class="status-badge ${movie.status === 'showing' ? 'status-showing' : 'status-hidden'}">${movie.status === 'showing' ? 'Showing' : 'Hidden'}</span></td>
-                                    <td>
-                                        <button class="action-btn edit-btn" onclick="editMovie(${movie.id})"><i class="fas fa-edit"></i> Edit</button>
-                                        <button class="action-btn toggle-btn" onclick="toggleMovie(${movie.id}, '${movie.status}')">
-                                            <i class="fas fa-eye${movie.status === 'showing' ? '-slash' : ''}"></i> ${movie.status === 'showing' ? 'Hide' : 'Show'}
-                                        </button>
-                                        <button class="action-btn delete-btn" onclick="deleteMovie(${movie.id})"><i class="fas fa-trash"></i> Delete</button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                    } else {
-                        html += '<tr><td colspan="7" style="text-align: center;">No movies found</td></tr>';
-                    }
-                    
-                    html += '</tbody></table>';
-                    document.getElementById('moviesTableContainer').innerHTML = html;
                 });
-        }
+            } else {
+                html += '<tr><td colspan="7" style="text-align: center;">No movies found</td></tr>';
+            }
+            
+            html += '</tbody></table>';
+            document.getElementById('moviesTableContainer').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading movies:', error);
+            document.getElementById('moviesTableContainer').innerHTML = 
+                '<p style="color: red; padding: 20px; text-align: center;">Error loading movies. Please refresh the page.</p>';
+        });
+}
+
 
         // Load showtimes
         function loadShowtimes() {
-            fetch('movie_operations.php?action=list')
-                .then(response => response.json())
-                .then(data => {
-                    let html = '';
-                    data.forEach(movie => {
-                        if (movie.status === 'showing') {
-                            html += `
-                                <div class="showtime-card">
-                                    <h3>${movie.title}</h3>
-                                    <div class="time-slots">
-                                        <div class="time-slot">10:00 AM</div>
-                                        <div class="time-slot">1:00 PM</div>
-                                        <div class="time-slot">4:00 PM</div>
-                                        <div class="time-slot">7:00 PM</div>
-                                        <div class="time-slot">10:00 PM</div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    });
-                    document.getElementById('showtimesContainer').innerHTML = html || '<p style="color: white;">No showtimes available.</p>';
+    fetch('movie_operations.php?action=list')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Showtimes data:', data); // Debug log
+            
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format');
+            }
+            
+            let html = '';
+            const showingMovies = data.filter(movie => movie.status === 'showing');
+            
+            if (showingMovies.length > 0) {
+                showingMovies.forEach(movie => {
+                    html += `
+                        <div class="showtime-card">
+                            <h3>${movie.title}</h3>
+                            <div class="time-slots">
+                                <div class="time-slot">10:00 AM</div>
+                                <div class="time-slot">1:00 PM</div>
+                                <div class="time-slot">4:00 PM</div>
+                                <div class="time-slot">7:00 PM</div>
+                                <div class="time-slot">10:00 PM</div>
+                            </div>
+                        </div>
+                    `;
                 });
-        }
-
+            } else {
+                html = '<p style="color: white; text-align: center;">No showtimes available.</p>';
+            }
+            
+            document.getElementById('showtimesContainer').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading showtimes:', error);
+            document.getElementById('showtimesContainer').innerHTML = 
+                '<p style="color: white; text-align: center;">Error loading showtimes. Please refresh the page.</p>';
+        });
+}
         // Open add modal
         function openAddModal() {
             document.getElementById('modalTitle').textContent = 'Add New Movie';
@@ -2055,19 +2098,36 @@ html {
 
         // Edit movie
         function editMovie(id) {
-            fetch(`movie_operations.php?action=get&id=${id}`)
-                .then(response => response.json())
-                .then(movie => {
-                    document.getElementById('modalTitle').textContent = 'Edit Movie';
-                    document.getElementById('movieId').value = movie.id;
-                    document.getElementById('movieTitle').value = movie.title;
-                    document.getElementById('movieDuration').value = movie.duration;
-                    document.getElementById('movieGenre').value = movie.genre;
-                    document.getElementById('movieRating').value = movie.rating;
-                    document.getElementById('movieStatus').value = movie.status;
-                    document.getElementById('movieModal').classList.add('active');
-                });
-        }
+    fetch(`movie_operations.php?action=get&id=${id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(movie => {
+            console.log('Movie data:', movie); // Debug log
+            
+            // Check if movie has data
+            if (!movie || movie.success === false) {
+                alert('Error loading movie: ' + (movie.message || 'Unknown error'));
+                return;
+            }
+            
+            document.getElementById('modalTitle').textContent = 'Edit Movie';
+            document.getElementById('movieId').value = movie.id;
+            document.getElementById('movieTitle').value = movie.title;
+            document.getElementById('movieDuration').value = movie.duration;
+            document.getElementById('movieGenre').value = movie.genre;
+            document.getElementById('movieRating').value = movie.rating;
+            document.getElementById('movieStatus').value = movie.status;
+            document.getElementById('movieModal').classList.add('active');
+        })
+        .catch(error => {
+            console.error('Error loading movie:', error);
+            alert('Error loading movie details. Please try again.');
+        });
+}
 
         // Close modal
         function closeModal() {

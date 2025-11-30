@@ -22,14 +22,14 @@ try {
     
     $username = $_SESSION['username'];
 
-    // Get booked seats
+    // Get booked seats - FIXED
     if (isset($_GET['action']) && $_GET['action'] === 'get_booked') {
         $movieId = intval($_GET['movie_id'] ?? 0);
         $date = $_GET['date'] ?? '';
         $showtime = $_GET['showtime'] ?? '';
         
         if (empty($movieId) || empty($date) || empty($showtime)) {
-            echo json_encode(['success' => false, 'message' => 'Missing parameters']);
+            echo json_encode(['success' => false, 'message' => 'Missing parameters', 'bookedSeats' => []]);
             exit();
         }
         
@@ -51,7 +51,7 @@ try {
         exit();
     }
 
-    // Get my bookings
+    // Get my bookings - FIXED
     if (isset($_GET['action']) && $_GET['action'] === 'my_bookings') {
         $sql = "SELECT b.*, m.title as movie_title, m.image_path 
                 FROM bookings b 
@@ -63,7 +63,8 @@ try {
         
         $bookings = $stmt->fetchAll();
         
-        echo json_encode(['success' => true, 'data' => $bookings]);
+        // Return array directly
+        echo json_encode($bookings);
         exit();
     }
 
